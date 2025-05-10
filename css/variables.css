@@ -1,0 +1,37 @@
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8faff;
+    --bg-tertiary: #f0f6ff;
+    --bg-accent: #eef8ff;
+    
+    --text-primary: #0a0a0a;
+    --text-secondary: #475569;
+    --text-tertiary: #94a3b8;
+    
+    --accent-1: #7c3aed; 
+    --accent-2: #06b6d4; 
+    --accent-3: #10b981; 
+    --accent-4: #f59e0b; 
+    --accent-5: #ec4899; 
+    --accent-6: #3b82f6; 
+    
+
+    --status-todo: #64748b;
+    --status-progress: #f59e0b;
+    --status-review: #06b6d4;
+    --status-done: #10b981;
+    
+
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(148, 163, 184, 0.2);
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    
+    /* Transitions */
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --spring: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }

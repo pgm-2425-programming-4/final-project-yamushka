@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanban Board / eindopdracht </title>
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo-section">
+            <div class="logo">TF</div>
+            <h1 class="brand-name">TaskFlow</h1>
+        </div>
+        
+        <nav>
+            <div class="nav-section">
+                <h3 class="nav-title">Navigation</h3>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                        
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            My Tasks
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <h3 class="nav-title">Projects</h3>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active">
+                            PGM3
+                            <span class="project-indicator"></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            PGM4
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            New Project
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </aside>
+    
+    <!-- start main -->
+    <main class="main-content">
+        <header class="header">
+            <div class="project-info">
+                <h1 class="project-title">Project PGM3</h1>
+                <div class="project-badge">
+                    <span class="badge-dot"></span>
+                    Active Development
+                </div>
+            </div>
+            
+            <div class="header-actions">
+                <button class="btn btn-secondary">
+                    <span>⚙️</span>
+                    Settings
+                </button>
+                <button class="btn btn-primary">
+                    Add Task
+                </button>
+                <a href="backlog.html" class="btn btn-secondary">
+                    View Backlog
+                </a>
+            </div>
+        </header>
+        
+        <!-- start kanban -->
+        <section class="kanban-board">
+            <!-- To Do Column -->
+                         <div class="kanban-column todo">
+                <div class="column-header">
+                    <div class="column-title">
+                        <div class="column-icon">TD</div>
+                        To Do
+                    </div>
+                    <div class="task-count">2</div>
+                </div>
+                <div class="column-body">
+                    <div class="task-card" style="--task-color: var(--status-todo)">
+                        <div class="task-header">
+                            <h3 class="task-title">Create</h3>
+                            <div class="task-priority medium">M</div>
+                        </div>
+                        <div class="task-meta">
+                            <span class="task-tag infra">
+                                <span class="tag-dot"></span>
+                                Infra
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="task-card" style="--task-color: var(--status-todo)">
+                        <div class="task-header">
+                            <h3 class="task-title">Some task for PGM3</h3>
+                            <div class="task-priority low">L</div>
+                        </div>
+                        <div class="task-meta">
+                            <span class="task-tag docs">
+                                <span class="tag-dot"></span>
+                                Documentation
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+            <div class="kanban-column progress">
+                <div class="column-header">
+                    <div class="column-title">
+                        <div class="column-icon">P</div>
+                        In Progress
+                    </div>
+                    <div class="task-count">1</div>
+                </div>
+                <div class="column-body">
+                    <div class="task-card" style="--task-color: var(--status-progress)">
+                        <div class="task-header">
+                            <h3 class="task-title">Set up Strapi</h3>
+                            <div class="task-priority high">H</div>
+                        </div>
+                        <div class="task-meta">
+                            <span class="task-tag infra">
+                                <span class="tag-dot"></span>
+                                Infra
+                            </span>
+                            <span class="task-tag backend">
+                                <span class="tag-dot"></span>
+                                Back-end
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="kanban-column review">
+                <div class="column-header">
+                    <div class="column-title">
+                        <div class="column-icon">R</div>
+                        Ready for Review
+                    </div>
+                    <div class="task-count">2</div>
+                </div>
+                <div class="column-body">
+                    <div class="task-card" style="--task-color: var(--status-review)">
+                        <div class="task-header">
+                            <h3 class="task-title">tasky task</h3>
+                            <div class="task-priority medium">M</div>
+                        </div>
+                        <div class="task-meta">
+                            <span class="task-tag frontend">
+                                <span class="tag-dot"></span>
+                                Front-end
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="task-card" style="--task-color: var(--status-review)">
+                        <div class="task-header">
+                            <h3 class="task-title">bla bla</h3>
+                            <div class="task-priority medium">M</div>
+                        </div>
+                        <div class="task-meta">
+                            <span class="task-tag frontend">
+                                <span class="tag-dot"></span>
+                                Front-end
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="kanban-column done">
+                <div class="column-header">
+                    <div class="column-title">
+                        <div class="column-icon">D</div>
+                        Done
+                    </div>
+                    <div class="task-count">2</div>
+                </div>
+                <div class="column-body">
+                    <div class="task-card" style="--task-color: var(--status-done)">
+                        <div class="task-header">
+                            <h3 class="task-title">Initialize Git</h3>
+                            <div class="task-priority low">L</div>
+                        </div>
+                        <div class="task-meta">
+                            <span class="task-tag infra">
+                                <span class="tag-dot"></span>
+                                Infra
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="task-card" style="--task-color: var(--status-done)">
+                        <div class="task-header">
+                            <h3 class="task-title">Document</h3>
+                            <div class="task-priority medium">M</div>
+                        </div>
+                        <div class="task-meta">
+                            <span class="task-tag backend">
+                                <span class="tag-dot"></span>
+                                Back-end
+                            </span>
+                            <span class="task-tag docs">
+                                <span class="tag-dot"></span>
+                                Documentation
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
