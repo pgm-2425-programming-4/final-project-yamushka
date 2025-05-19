@@ -1,0 +1,21 @@
+{
+  "kind": "collectionType",
+  "collectionName": "statuses",
+  "info": {
+    "singularName": "status",
+    "pluralName": "statuses",
+    "displayName": "status",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "statusName": {
+      "type": "string",
+      "required": true,
+      "unique": true,
+      "default": "backlog"
+    }
+  }
+}
