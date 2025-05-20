@@ -12,7 +12,6 @@ export default function PaginatedBacklog() {
         const res = await axios.get(
           "http://localhost:1337/api/tasks?filters[taskStatus][statusName][$eq]=Backlog&populate=taskStatus&pagination[page]=1&pagination[pageSize]=10"
         );
-          
       return res.data;
     },
   });
