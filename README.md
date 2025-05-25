@@ -11,3 +11,10 @@ Een dynamisch task management platform met:
   - Axios voor data-ophaling
   - Tanstack Query voor state management
   - Statische HTML/CSS volledig geïntegreerd
+ 
+deployed = netflify 
+https://infrastructuur.netlify.app/
+
+database via render = jamming 
+
+postgress.app 
