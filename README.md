@@ -17,7 +17,7 @@ https://infrastructuur.netlify.app/
 
 gratis database via render = jamming (evv blijft zelfde) externe database = log via github
 
-DATABASE_SSL=false omdat lokcaal is 
+DATABASE_SSL=false   = cuz lokaal , 
 database.js aanpassen 
 
 postgress.app  = lokaal = env aanpassen naar lokale credentials 
