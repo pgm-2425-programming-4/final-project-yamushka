@@ -1,7 +1,7 @@
 # TaskFlow
 
 Een dynamisch task management platform met:
--  3 folders = client, server, design 
+-  3 folders = client (react), server (strapi), design 
 
  Werkt:
 - Strapi backend correct opgezet met `Task` en `TaskStatus`
@@ -15,6 +15,10 @@ Een dynamisch task management platform met:
 deployed = netflify 
 https://infrastructuur.netlify.app/
 
-database via render = jamming 
+gratis database via render = jamming (evv blijft zelfde) externe database = log via github
 
-postgress.app 
+DATABASE_SSL=false omdat lokcaal is 
+database.js aanpassen 
+
+postgress.app  = lokaal = env aanpassen naar lokale credentials 
+(npm i pg) en dan (npm run develop) wordt doorgestuurd naar http://localhost:1337/admin/auth/register-admin
