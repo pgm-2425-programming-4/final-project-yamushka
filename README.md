@@ -17,6 +17,8 @@ Een dynamisch task management platform met:
 deployed = netflify 
 https://infrastructuur.netlify.app/
 
+render = https://jamming-api.onrender.com/admin
+
 
 RENDER = 
 database  = jamming (evv blijft zelfde) externe database = log via github
@@ -30,5 +32,6 @@ database.js aanpassen
 
 postgress.app  = lokaal = env aanpassen naar lokale credentials 
 (npm i pg) en dan (npm run develop) wordt doorgestuurd naar http://localhost:1337/admin/auth/register-admin
+
 
 
