@@ -1,4 +1,4 @@
-# TaskFlow
+# Tasks kanban
 
 Een dynamisch task management platform met:
 -  3 folders = client (react), server (strapi), design 
