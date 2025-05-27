@@ -1,5 +1,7 @@
 # Tasks kanban
 
+server = npm run dev
+
 Een dynamisch task management platform met:
 -  3 folders = client (react), server (strapi), design 
 
