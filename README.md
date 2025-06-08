@@ -15,7 +15,7 @@ Een dynamisch task management platform met:
   - Statische HTML/CSS volledig geïntegreerd
  
 deployed = netflify 
-https://infrastructuur.netlify.app/
+
 
 render = https://jamming-api.onrender.com/admin
 
