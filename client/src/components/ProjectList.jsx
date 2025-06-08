@@ -13,8 +13,6 @@ function ProjectList() {
     },
   });
 
-  console.log("Projecten data van Strapi:", data);
-
   if (isLoading) return <p>Loading </p>;
   if (isError) return <p>Error</p>;
 
