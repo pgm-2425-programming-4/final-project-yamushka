@@ -30,7 +30,7 @@ function Backlog() {
               </tr>
             </thead>
             <tbody>
-              {}
+              {/* Tutaj będą dynamiczne wiersze zadań z backendu */}
             </tbody>
           </table>
           <div className="pagination">

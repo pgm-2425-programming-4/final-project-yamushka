@@ -1,9 +1,10 @@
 import React from "react";
+import "../../../design/css/kanbanBoard.css";
 
 function KanbanBoard() {
   return (
     <div className="kanban-wrapper">
-      {}
+      {/* Sidebar */}
       <aside className="sidebar">
         <div className="logo-section">
           <h1 className="brand-name">kanban</h1>
@@ -23,32 +24,25 @@ function KanbanBoard() {
           <div className="nav-section">
             <h3 className="nav-title">Projects</h3>
             <ul className="nav-list">
-              {/* dynamiczna lista projektów ze Strapi */}
+              {/* Tu będzie dynamiczna lista projektów ze Strapi */}
               <li className="nav-item">
                 <a href="#" className="nav-link active">PGM3 <span className="project-indicator"></span></a>
               </li>
               <li className="nav-item">
                 <a href="#" className="nav-link">PGM4</a>
               </li>
-              <li className="nav-item">
-                <a href="#" className="nav-link">New Project</a>
-              </li>
             </ul>
+            <button className="btn btn-primary" style={{marginTop: '1rem'}}>Add Project</button>
           </div>
         </nav>
       </aside>
-      {/* main */}
+      {/* Main content */}
       <main className="main-content">
         <header className="header">
           <div className="project-info">
-            <h1 className="project-title">Project PGM4</h1>
-            <div className="project-badge">
-              <span className="badge-dot"></span>
-              Active project
-            </div>
+            <h1 className="project-title">Project Board</h1>
           </div>
           <div className="header-actions">
-            {}
             <button className="btn btn-primary">Add Task</button>
             <a href="/backlog" className="btn btn-secondary">View Backlog</a>
           </div>
@@ -65,7 +59,7 @@ function KanbanBoard() {
               <div className="task-count">2</div>
             </div>
             <div className="column-body">
-              {/* dynamiczne taski ze Strapi (status: To Do) */}
+              {/* Tu będą dynamiczne taski ze Strapi (status: To Do) */}
               <div className="task-card" style={{"--task-color": "var(--status-todo)"}}>
                 <div className="task-header">
                   <h3 className="task-title">Create</h3>
@@ -92,7 +86,7 @@ function KanbanBoard() {
               </div>
             </div>
           </div>
-          {/* progress column */}
+          {/* In Progress Column */}
           <div className="kanban-column progress">
             <div className="column-header">
               <div className="column-title">
@@ -102,7 +96,7 @@ function KanbanBoard() {
               <div className="task-count">1</div>
             </div>
             <div className="column-body">
-              {/* dynamiczne taski ze Strapi (status: In Progress) */}
+              {/* Tu będą dynamiczne taski ze Strapi (status: In Progress) */}
               <div className="task-card" style={{"--task-color": "var(--status-progress)"}}>
                 <div className="task-header">
                   <h3 className="task-title">Set up Strapi</h3>
@@ -121,7 +115,7 @@ function KanbanBoard() {
               </div>
             </div>
           </div>
-          {/* for Review Column */}
+          {/* Ready for Review Column */}
           <div className="kanban-column review">
             <div className="column-header">
               <div className="column-title">
@@ -131,7 +125,7 @@ function KanbanBoard() {
               <div className="task-count">2</div>
             </div>
             <div className="column-body">
-              {/* dynamiczne taski ze Strapi (status: Ready for Review) */}
+              {/* Tu będą dynamiczne taski ze Strapi (status: Ready for Review) */}
               <div className="task-card" style={{"--task-color": "var(--status-review)"}}>
                 <div className="task-header">
                   <h3 className="task-title">tasky task</h3>
@@ -168,7 +162,7 @@ function KanbanBoard() {
               <div className="task-count">2</div>
             </div>
             <div className="column-body">
-              {/* dynamiczne taski ze Strapi (status: Done) */}
+              {/* Tu będą dynamiczne taski ze Strapi (status: Done) */}
               <div className="task-card" style={{"--task-color": "var(--status-done)"}}>
                 <div className="task-header">
                   <h3 className="task-title">Initialize Git</h3>
