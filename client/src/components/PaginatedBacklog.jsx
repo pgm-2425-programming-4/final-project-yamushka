@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Backlog from "./Backlog";
 import Pagination from "./Pagination";
-import "../../design/css/reset.css";
-import "../../design/css/main.css";
+import "../../public/css/reset.css";
+import "../../public/css/main.css";
 
 export default function PaginatedBacklog() {
   const { data, isLoading, isError, error } = useQuery({

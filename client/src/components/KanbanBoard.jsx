@@ -1,65 +1,74 @@
 import React from "react";
-import "../../../design/css/main.css";
+import Sidebar from "./Sidebar";
+import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { API_URL } from "../constants/constants";
+import "../../public/css/reset.css";
+import "../../public/css/main.css";
 
 function KanbanBoard() {
+  const { projectId } = useParams();
+  const { data: projectData, isLoading: projectLoading } = useQuery({
+    queryKey: ["project", projectId],
+    queryFn: async () => {
+      const res = await axios.get(`${API_URL}/projects/${projectId}`);
+      return res.data;
+    },
+    enabled: !!projectId,
+  });
+  const { data: tasksData, isLoading: tasksLoading } = useQuery({
+    queryKey: ["tasks", projectId],
+    queryFn: async () => {
+      const res = await axios.get(
+        `${API_URL}/tasks?filters[project][id][$eq]=${projectId}&populate=taskStatus,tags`
+      );
+      return res.data;
+    },
+    enabled: !!projectId,
+  });
+
+  // Helper: groepeer taken per status
+  const groupByStatus = (tasks) => {
+    const groups = { todo: [], progress: [], review: [], done: [] };
+    tasks.forEach((task) => {
+      const status =
+        (task.attributes.taskStatus?.data?.attributes?.statusName || "")
+          .toLowerCase();
+      if (status.includes("todo")) groups.todo.push(task);
+      else if (status.includes("progress")) groups.progress.push(task);
+      else if (status.includes("review")) groups.review.push(task);
+      else if (status.includes("done")) groups.done.push(task);
+    });
+    return groups;
+  };
+
+  const grouped = tasksData
+    ? groupByStatus(tasksData.data)
+    : { todo: [], progress: [], review: [], done: [] };
+
   return (
     <div className="kanban-wrapper">
-      {/* Sidebar */}
-      <aside className="sidebar">
-        <div className="logo-section">
-          <h1 className="brand-name">kanban</h1>
-        </div>
-        <nav>
-          <div className="nav-section">
-            <h3 className="nav-title">Navigation</h3>
-            <ul className="nav-list">
-              <li className="nav-item">
-                <a href="#" className="nav-link">
-                  Dashboard
-                </a>
-              </li>
-              <li className="nav-item">
-                <a href="#" className="nav-link">
-                  My Tasks
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div className="nav-section">
-            <h3 className="nav-title">Projects</h3>
-            <ul className="nav-list">
-              {/* Tu będzie dynamiczna lista projektów ze Strapi */}
-              <li className="nav-item">
-                <a href="#" className="nav-link active">
-                  PGM3 <span className="project-indicator"></span>
-                </a>
-              </li>
-              <li className="nav-item">
-                <a href="#" className="nav-link">
-                  PGM4
-                </a>
-              </li>
-            </ul>
-            <button className="btn btn-primary" style={{ marginTop: "1rem" }}>
-              Add Project
-            </button>
-          </div>
-        </nav>
-      </aside>
-      {/* Main content */}
+      <Sidebar currentProjectId={projectId} />
       <main className="main-content">
         <header className="header">
           <div className="project-info">
-            <h1 className="project-title">Project Board</h1>
+            <h1 className="project-title">
+              {projectLoading
+                ? "Loading..."
+                : projectData?.data?.attributes?.name || "Project Board"}
+            </h1>
           </div>
           <div className="header-actions">
             <button className="btn btn-primary">Add Task</button>
-            <a href="/backlog" className="btn btn-secondary">
+            <a
+              href={`/projects/${projectId}/backlog`}
+              className="btn btn-secondary"
+            >
               View Backlog
             </a>
           </div>
         </header>
-        {/* Kanban board columns */}
         <section className="kanban-board">
           {/* To Do Column */}
           <div className="kanban-column todo">
@@ -68,40 +77,40 @@ function KanbanBoard() {
                 <div className="column-icon">TD</div>
                 To Do
               </div>
-              <div className="task-count">2</div>
+              <div className="task-count">{grouped.todo.length}</div>
             </div>
             <div className="column-body">
-              {/* Tu będą dynamiczne taski ze Strapi (status: To Do) */}
-              <div
-                className="task-card"
-                style={{ "--task-color": "var(--status-todo)" }}
-              >
-                <div className="task-header">
-                  <h3 className="task-title">Create</h3>
-                  <div className="task-priority medium">M</div>
-                </div>
-                <div className="task-meta">
-                  <span className="task-tag infra">
-                    <span className="tag-dot"></span>
-                    Infra
-                  </span>
-                </div>
-              </div>
-              <div
-                className="task-card"
-                style={{ "--task-color": "var(--status-todo)" }}
-              >
-                <div className="task-header">
-                  <h3 className="task-title">Some task for PGM3</h3>
-                  <div className="task-priority low">L</div>
-                </div>
-                <div className="task-meta">
-                  <span className="task-tag docs">
-                    <span className="tag-dot"></span>
-                    Documentation
-                  </span>
-                </div>
-              </div>
+              {tasksLoading ? (
+                <p>Loading...</p>
+              ) : (
+                grouped.todo.map((task) => (
+                  <div
+                    key={task.id}
+                    className="task-card"
+                    style={{ "--task-color": "var(--status-todo)" }}
+                  >
+                    <div className="task-header">
+                      <h3 className="task-title">{task.attributes.title}</h3>
+                      <div
+                        className={`task-priority ${task.attributes.priority?.toLowerCase()}`}
+                      >
+                        {task.attributes.priority?.[0]}
+                      </div>
+                    </div>
+                    <div className="task-meta">
+                      {task.attributes.tags?.data?.map((tag) => (
+                        <span
+                          key={tag.id}
+                          className={`task-tag ${tag.attributes.name.toLowerCase()}`}
+                        >
+                          <span className="tag-dot"></span>
+                          {tag.attributes.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
           {/* In Progress Column */}
@@ -111,29 +120,40 @@ function KanbanBoard() {
                 <div className="column-icon">P</div>
                 In Progress
               </div>
-              <div className="task-count">1</div>
+              <div className="task-count">{grouped.progress.length}</div>
             </div>
             <div className="column-body">
-              {/* Tu będą dynamiczne taski ze Strapi (status: In Progress) */}
-              <div
-                className="task-card"
-                style={{ "--task-color": "var(--status-progress)" }}
-              >
-                <div className="task-header">
-                  <h3 className="task-title">Set up Strapi</h3>
-                  <div className="task-priority high">H</div>
-                </div>
-                <div className="task-meta">
-                  <span className="task-tag infra">
-                    <span className="tag-dot"></span>
-                    Infra
-                  </span>
-                  <span className="task-tag backend">
-                    <span className="tag-dot"></span>
-                    Back-end
-                  </span>
-                </div>
-              </div>
+              {tasksLoading ? (
+                <p>Loading...</p>
+              ) : (
+                grouped.progress.map((task) => (
+                  <div
+                    key={task.id}
+                    className="task-card"
+                    style={{ "--task-color": "var(--status-progress)" }}
+                  >
+                    <div className="task-header">
+                      <h3 className="task-title">{task.attributes.title}</h3>
+                      <div
+                        className={`task-priority ${task.attributes.priority?.toLowerCase()}`}
+                      >
+                        {task.attributes.priority?.[0]}
+                      </div>
+                    </div>
+                    <div className="task-meta">
+                      {task.attributes.tags?.data?.map((tag) => (
+                        <span
+                          key={tag.id}
+                          className={`task-tag ${tag.attributes.name.toLowerCase()}`}
+                        >
+                          <span className="tag-dot"></span>
+                          {tag.attributes.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
           {/* Ready for Review Column */}
@@ -143,40 +163,40 @@ function KanbanBoard() {
                 <div className="column-icon">R</div>
                 Ready for Review
               </div>
-              <div className="task-count">2</div>
+              <div className="task-count">{grouped.review.length}</div>
             </div>
             <div className="column-body">
-              {/* Tu będą dynamiczne taski ze Strapi (status: Ready for Review) */}
-              <div
-                className="task-card"
-                style={{ "--task-color": "var(--status-review)" }}
-              >
-                <div className="task-header">
-                  <h3 className="task-title">tasky task</h3>
-                  <div className="task-priority medium">M</div>
-                </div>
-                <div className="task-meta">
-                  <span className="task-tag frontend">
-                    <span className="tag-dot"></span>
-                    Front-end
-                  </span>
-                </div>
-              </div>
-              <div
-                className="task-card"
-                style={{ "--task-color": "var(--status-review)" }}
-              >
-                <div className="task-header">
-                  <h3 className="task-title">bla bla</h3>
-                  <div className="task-priority medium">M</div>
-                </div>
-                <div className="task-meta">
-                  <span className="task-tag frontend">
-                    <span className="tag-dot"></span>
-                    Front-end
-                  </span>
-                </div>
-              </div>
+              {tasksLoading ? (
+                <p>Loading...</p>
+              ) : (
+                grouped.review.map((task) => (
+                  <div
+                    key={task.id}
+                    className="task-card"
+                    style={{ "--task-color": "var(--status-review)" }}
+                  >
+                    <div className="task-header">
+                      <h3 className="task-title">{task.attributes.title}</h3>
+                      <div
+                        className={`task-priority ${task.attributes.priority?.toLowerCase()}`}
+                      >
+                        {task.attributes.priority?.[0]}
+                      </div>
+                    </div>
+                    <div className="task-meta">
+                      {task.attributes.tags?.data?.map((tag) => (
+                        <span
+                          key={tag.id}
+                          className={`task-tag ${tag.attributes.name.toLowerCase()}`}
+                        >
+                          <span className="tag-dot"></span>
+                          {tag.attributes.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
           {/* Done Column */}
@@ -186,44 +206,40 @@ function KanbanBoard() {
                 <div className="column-icon">D</div>
                 Done
               </div>
-              <div className="task-count">2</div>
+              <div className="task-count">{grouped.done.length}</div>
             </div>
             <div className="column-body">
-              {/* Tu będą dynamiczne taski ze Strapi (status: Done) */}
-              <div
-                className="task-card"
-                style={{ "--task-color": "var(--status-done)" }}
-              >
-                <div className="task-header">
-                  <h3 className="task-title">Initialize Git</h3>
-                  <div className="task-priority low">L</div>
-                </div>
-                <div className="task-meta">
-                  <span className="task-tag infra">
-                    <span className="tag-dot"></span>
-                    Infra
-                  </span>
-                </div>
-              </div>
-              <div
-                className="task-card"
-                style={{ "--task-color": "var(--status-done)" }}
-              >
-                <div className="task-header">
-                  <h3 className="task-title">Document</h3>
-                  <div className="task-priority medium">M</div>
-                </div>
-                <div className="task-meta">
-                  <span className="task-tag backend">
-                    <span className="tag-dot"></span>
-                    Back-end
-                  </span>
-                  <span className="task-tag docs">
-                    <span className="tag-dot"></span>
-                    Documentation
-                  </span>
-                </div>
-              </div>
+              {tasksLoading ? (
+                <p>Loading...</p>
+              ) : (
+                grouped.done.map((task) => (
+                  <div
+                    key={task.id}
+                    className="task-card"
+                    style={{ "--task-color": "var(--status-done)" }}
+                  >
+                    <div className="task-header">
+                      <h3 className="task-title">{task.attributes.title}</h3>
+                      <div
+                        className={`task-priority ${task.attributes.priority?.toLowerCase()}`}
+                      >
+                        {task.attributes.priority?.[0]}
+                      </div>
+                    </div>
+                    <div className="task-meta">
+                      {task.attributes.tags?.data?.map((tag) => (
+                        <span
+                          key={tag.id}
+                          className={`task-tag ${tag.attributes.name.toLowerCase()}`}
+                        >
+                          <span className="tag-dot"></span>
+                          {tag.attributes.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </section>
