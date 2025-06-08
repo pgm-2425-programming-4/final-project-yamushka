@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../constants/constants";
-import "../../public/css/reset.css";
 import "../../public/css/main.css";
 
 function Sidebar({ currentProjectId }) {
@@ -25,10 +24,14 @@ function Sidebar({ currentProjectId }) {
           <h3 className="nav-title">Navigation</h3>
           <ul className="nav-list">
             <li className="nav-item">
-              <Link to="/" className="nav-link">Dashboard</Link>
+              <Link to="/" className="nav-link">
+                Dashboard
+              </Link>
             </li>
             <li className="nav-item">
-              <Link to="#" className="nav-link">My Tasks</Link>
+              <Link to="#" className="nav-link">
+                My Tasks
+              </Link>
             </li>
           </ul>
         </div>
@@ -37,19 +40,30 @@ function Sidebar({ currentProjectId }) {
           <ul className="nav-list">
             {isLoading && <li>Loading...</li>}
             {isError && <li>Error loading projects</li>}
-            {data && data.data.map((project) => (
-              <li key={project.id} className="nav-item">
-                <Link
-                  to={`/projects/${project.id}`}
-                  className={`nav-link${currentProjectId == project.id ? " active" : ""}`}
-                >
-                  {project.attributes.name || `Project ${project.id}`}
-                  {currentProjectId == project.id && <span className="project-indicator"></span>}
-                </Link>
-              </li>
-            ))}
+            {data &&
+              data.data.map((project) => (
+                <li key={project.id} className="nav-item">
+                  <Link
+                    to={`/projects/${project.id}`}
+                    className={`nav-link${
+                      currentProjectId == project.id ? " active" : ""
+                    }`}
+                  >
+                    {project.attributes.name || `Project ${project.id}`}
+                    {currentProjectId == project.id && (
+                      <span className="project-indicator"></span>
+                    )}
+                  </Link>
+                </li>
+              ))}
           </ul>
-          <button className="btn btn-primary" style={{ marginTop: "1rem" }} onClick={() => navigate("/")}>Add Project</button>
+          <button
+            className="btn btn-primary"
+            style={{ marginTop: "1rem" }}
+            onClick={() => navigate("/")}
+          >
+            Add Project
+          </button>
         </div>
       </nav>
     </aside>

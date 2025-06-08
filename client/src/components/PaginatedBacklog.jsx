@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Backlog from "./Backlog";
 import Pagination from "./Pagination";
-import "../../public/css/reset.css";
-import "../../public/css/main.css";
+import "../../design/css/reset.css";
+import "../../design/css/main.css";
 
 export default function PaginatedBacklog() {
   const { data, isLoading, isError, error } = useQuery({
@@ -23,7 +23,7 @@ export default function PaginatedBacklog() {
     <section className="backlog-view active">
       <div className="backlog-container">
         <Backlog tasks={data.data} />
-        {/* paginatie later */}
+        {}
         <Pagination meta={data.meta.pagination} />
       </div>
     </section>

@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { API_URL } from "../constants/constants";
-import "../../public/css/reset.css";
+
 import "../../public/css/main.css";
 
 function KanbanBoard() {
@@ -32,9 +32,9 @@ function KanbanBoard() {
   const groupByStatus = (tasks) => {
     const groups = { todo: [], progress: [], review: [], done: [] };
     tasks.forEach((task) => {
-      const status =
-        (task.attributes.taskStatus?.data?.attributes?.statusName || "")
-          .toLowerCase();
+      const status = (
+        task.attributes.taskStatus?.data?.attributes?.statusName || ""
+      ).toLowerCase();
       if (status.includes("todo")) groups.todo.push(task);
       else if (status.includes("progress")) groups.progress.push(task);
       else if (status.includes("review")) groups.review.push(task);
@@ -70,7 +70,7 @@ function KanbanBoard() {
           </div>
         </header>
         <section className="kanban-board">
-          {/* To Do Column */}
+          {}
           <div className="kanban-column todo">
             <div className="column-header">
               <div className="column-title">
@@ -156,7 +156,7 @@ function KanbanBoard() {
               )}
             </div>
           </div>
-          {/* Ready for Review Column */}
+          {}
           <div className="kanban-column review">
             <div className="column-header">
               <div className="column-title">
