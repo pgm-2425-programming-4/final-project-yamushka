@@ -8,39 +8,29 @@ function Sidebar({ currentProjectId }) {
     queryKey: ["projects"],
     queryFn: async () => {
       const res = await axios.get(`${API_URL}/projects`);
+      console.log("Sidebar projecten data:", res.data); 
       return res.data;
     },
   });
+
   const navigate = useNavigate();
 
   return (
     <aside className="sidebar">
       <div className="logo-section">
-        <h1 className="brand-name">kanban</h1>
+        <h1 className="brand-name">Kanban</h1>
       </div>
+
       <nav>
         <div className="nav-section">
-          <h3 className="nav-title">Navigation</h3>
+          <h3 className="nav-title">Projecten</h3>
           <ul className="nav-list">
-            <li className="nav-item">
-              <Link to="/" className="nav-link">
-                Dashboard
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="#" className="nav-link">
-                My Tasks
-              </Link>
-            </li>
-          </ul>
-        </div>
-        <div className="nav-section">
-          <h3 className="nav-title">Projects</h3>
-          <ul className="nav-list">
-            {isLoading && <li>Loading...</li>}
-            {isError && <li>Error loading projects</li>}
-            {data &&
-              data.data.map((project) => (
+            {isLoading && <li>Laden...</li>}
+            {isError && <li>Fout bij laden</li>}
+            {data?.data?.map((project) => {
+    
+              const name = project.name;
+              return (
                 <li key={project.id} className="nav-item">
                   <Link
                     to={`/projects/${project.id}`}
@@ -48,20 +38,24 @@ function Sidebar({ currentProjectId }) {
                       currentProjectId == project.id ? " active" : ""
                     }`}
                   >
-                    {project.attributes.name || `Project ${project.id}`}
+                    {name || `Project ${project.id}`}
                     {currentProjectId == project.id && (
-                      <span className="project-indicator"></span>
+                      <span className="project-indicator" />
                     )}
                   </Link>
                 </li>
-              ))}
+              );
+            })}
           </ul>
+        </div>
+
+        <div className="nav-section">
           <button
             className="btn btn-primary"
-            style={{ marginTop: "1rem" }}
             onClick={() => navigate("/")}
+            style={{ marginTop: "1rem" }}
           >
-            Add Project
+            Project toevoegen
           </button>
         </div>
       </nav>

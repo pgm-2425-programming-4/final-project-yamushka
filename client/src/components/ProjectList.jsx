@@ -1,31 +1,40 @@
-import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
-import axios from "axios";
 
-export default function ProjectList() {
-  const { data, isLoading, isError, error } = useQuery({
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import { API_URL } from "../constants/constants";
+
+function ProjectList() {
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["projects"],
     queryFn: async () => {
-      const res = await axios.get("http://localhost:1337/api/projects");
+      const res = await axios.get(`${API_URL}/projects?populate=*`);
       return res.data;
     },
   });
 
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Error: {error.message}</p>;
+  console.log("Projecten data van Strapi:", data);
+
+  if (isLoading) return <p>Loading </p>;
+  if (isError) return <p>Error</p>;
 
   return (
     <main className="main-content">
-      <h1 className="project-title">Projecten</h1>
-      <ul className="nav-list">
-        {data.data.map((project) => (
-          <li key={project.id} className="nav-item">
-            <Link className="nav-link" to={`/projects/${project.id}`}>
-              {project.attributes.name || `Project ${project.id}`}
-            </Link>
-          </li>
-        ))}
+      <h1 className="project-title">Alle projecten</h1>
+      <ul className="project-list">
+        {data?.data?.map((project) => {
+          const name = project.attributes?.name;
+          return (
+            <li key={project.id} className="project-item">
+              <Link to={`/projects/${project.id}`} className="project-link">
+                {name || `Project ${project.id}`}
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </main>
   );
 }
+
+export default ProjectList;
