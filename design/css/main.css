@@ -1,4 +1,5 @@
 @import url(variables.css);
+@import url(reset.css);
 @import url(sidebar.css);
 @import url(kanbanBoard.css);
 @import url(backlog.css);
