@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../constants/constants";
-import "../../public/css/main.css";
 
 function Sidebar({ currentProjectId }) {
   const { data, isLoading, isError } = useQuery({

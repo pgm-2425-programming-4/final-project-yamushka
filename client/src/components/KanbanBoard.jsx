@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { API_URL } from "../constants/constants";
 
-import "../../public/css/main.css";
+
 
 function KanbanBoard() {
   const { projectId } = useParams();

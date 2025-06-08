@@ -1,10 +1,10 @@
+
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import KanbanBoard from "./components/KanbanBoard";
-import Backlog from "./components/Backlog";
+import BacklogPage from "./components/BacklogPage"; 
 import ProjectList from "./components/ProjectList";
 
-import "../public/css/reset.css";
-import "../public/css/main.css";
 
 function App() {
   return (
@@ -12,7 +12,11 @@ function App() {
       <Routes>
         <Route path="/" element={<ProjectList />} />
         <Route path="/projects/:projectId" element={<KanbanBoard />} />
-        <Route path="/projects/:projectId/backlog" element={<Backlog />} />
+        <Route
+          path="/projects/:projectId/backlog"
+          element={<BacklogPage />}
+        />{" "}
+        {/* <-- aangepast */}
       </Routes>
     </BrowserRouter>
   );
