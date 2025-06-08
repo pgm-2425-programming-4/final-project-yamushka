@@ -1,5 +1,5 @@
 import React from "react";
-import "../../../design/css/kanbanBoard.css";
+import "../../../design/css/main.css";
 
 function KanbanBoard() {
   return (
@@ -14,10 +14,14 @@ function KanbanBoard() {
             <h3 className="nav-title">Navigation</h3>
             <ul className="nav-list">
               <li className="nav-item">
-                <a href="#" className="nav-link">Dashboard</a>
+                <a href="#" className="nav-link">
+                  Dashboard
+                </a>
               </li>
               <li className="nav-item">
-                <a href="#" className="nav-link">My Tasks</a>
+                <a href="#" className="nav-link">
+                  My Tasks
+                </a>
               </li>
             </ul>
           </div>
@@ -26,13 +30,19 @@ function KanbanBoard() {
             <ul className="nav-list">
               {/* Tu będzie dynamiczna lista projektów ze Strapi */}
               <li className="nav-item">
-                <a href="#" className="nav-link active">PGM3 <span className="project-indicator"></span></a>
+                <a href="#" className="nav-link active">
+                  PGM3 <span className="project-indicator"></span>
+                </a>
               </li>
               <li className="nav-item">
-                <a href="#" className="nav-link">PGM4</a>
+                <a href="#" className="nav-link">
+                  PGM4
+                </a>
               </li>
             </ul>
-            <button className="btn btn-primary" style={{marginTop: '1rem'}}>Add Project</button>
+            <button className="btn btn-primary" style={{ marginTop: "1rem" }}>
+              Add Project
+            </button>
           </div>
         </nav>
       </aside>
@@ -44,7 +54,9 @@ function KanbanBoard() {
           </div>
           <div className="header-actions">
             <button className="btn btn-primary">Add Task</button>
-            <a href="/backlog" className="btn btn-secondary">View Backlog</a>
+            <a href="/backlog" className="btn btn-secondary">
+              View Backlog
+            </a>
           </div>
         </header>
         {/* Kanban board columns */}
@@ -60,7 +72,10 @@ function KanbanBoard() {
             </div>
             <div className="column-body">
               {/* Tu będą dynamiczne taski ze Strapi (status: To Do) */}
-              <div className="task-card" style={{"--task-color": "var(--status-todo)"}}>
+              <div
+                className="task-card"
+                style={{ "--task-color": "var(--status-todo)" }}
+              >
                 <div className="task-header">
                   <h3 className="task-title">Create</h3>
                   <div className="task-priority medium">M</div>
@@ -72,7 +87,10 @@ function KanbanBoard() {
                   </span>
                 </div>
               </div>
-              <div className="task-card" style={{"--task-color": "var(--status-todo)"}}>
+              <div
+                className="task-card"
+                style={{ "--task-color": "var(--status-todo)" }}
+              >
                 <div className="task-header">
                   <h3 className="task-title">Some task for PGM3</h3>
                   <div className="task-priority low">L</div>
@@ -97,7 +115,10 @@ function KanbanBoard() {
             </div>
             <div className="column-body">
               {/* Tu będą dynamiczne taski ze Strapi (status: In Progress) */}
-              <div className="task-card" style={{"--task-color": "var(--status-progress)"}}>
+              <div
+                className="task-card"
+                style={{ "--task-color": "var(--status-progress)" }}
+              >
                 <div className="task-header">
                   <h3 className="task-title">Set up Strapi</h3>
                   <div className="task-priority high">H</div>
@@ -126,7 +147,10 @@ function KanbanBoard() {
             </div>
             <div className="column-body">
               {/* Tu będą dynamiczne taski ze Strapi (status: Ready for Review) */}
-              <div className="task-card" style={{"--task-color": "var(--status-review)"}}>
+              <div
+                className="task-card"
+                style={{ "--task-color": "var(--status-review)" }}
+              >
                 <div className="task-header">
                   <h3 className="task-title">tasky task</h3>
                   <div className="task-priority medium">M</div>
@@ -138,7 +162,10 @@ function KanbanBoard() {
                   </span>
                 </div>
               </div>
-              <div className="task-card" style={{"--task-color": "var(--status-review)"}}>
+              <div
+                className="task-card"
+                style={{ "--task-color": "var(--status-review)" }}
+              >
                 <div className="task-header">
                   <h3 className="task-title">bla bla</h3>
                   <div className="task-priority medium">M</div>
@@ -163,7 +190,10 @@ function KanbanBoard() {
             </div>
             <div className="column-body">
               {/* Tu będą dynamiczne taski ze Strapi (status: Done) */}
-              <div className="task-card" style={{"--task-color": "var(--status-done)"}}>
+              <div
+                className="task-card"
+                style={{ "--task-color": "var(--status-done)" }}
+              >
                 <div className="task-header">
                   <h3 className="task-title">Initialize Git</h3>
                   <div className="task-priority low">L</div>
@@ -175,7 +205,10 @@ function KanbanBoard() {
                   </span>
                 </div>
               </div>
-              <div className="task-card" style={{"--task-color": "var(--status-done)"}}>
+              <div
+                className="task-card"
+                style={{ "--task-color": "var(--status-done)" }}
+              >
                 <div className="task-header">
                   <h3 className="task-title">Document</h3>
                   <div className="task-priority medium">M</div>
