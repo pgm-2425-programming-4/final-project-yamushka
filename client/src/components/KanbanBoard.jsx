@@ -4,22 +4,33 @@ import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { API_URL } from "../constants/constants";
+import TaskDialog from "./TaskDialog";
+import AddTaskForm from "./AddTaskForm";
 
 function KanbanBoard() {
-  const { projectId } = useParams(); 
-  const [setShowAddTask] = useState(false);
+  const { projectId } = useParams();
+  const [showAddTask, setShowAddTask] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [filters, setFilters] = useState({
+    search: "",
+    status: "all",
+    priority: "all",
+  });
 
+  // Haal statussen op voor het hele systeem
+  const { data: statusData } = useQuery({
+    queryKey: ["statuses"],
+    queryFn: async () => {
+      const res = await axios.get(`${API_URL}/statuses`);
+      return res.data;
+    },
+  });
 
-  const {
-    data: projectData,
-    isLoading: projectLoading,
-
-  } = useQuery({
+  // Haal het project op via documentId
+  const { data: projectData, isLoading: projectLoading } = useQuery({
     queryKey: ["project", projectId],
     queryFn: async () => {
       const res = await axios.get(
-
-        
         `${API_URL}/projects?filters[documentId][$eq]=${projectId}`
       );
       return res.data;
@@ -31,22 +42,60 @@ function KanbanBoard() {
   const actualProjectId = actualProject?.id;
 
 
-  const {
-    data: tasksData,
-    isLoading: tasksLoading,
-
-  } = useQuery({
-    queryKey: ["tasks", actualProjectId],
+  const { data: tasksData, isLoading: tasksLoading } = useQuery({
+    queryKey: ["projectTasks", projectId],
     queryFn: async () => {
       const res = await axios.get(
-        `${API_URL}/projects?filters[documentId][$eq]=${projectId}&populate[tasks][populate]=taskStatus`
+        `${API_URL}/projects?filters[documentId][$eq]=[tasks][populate]=taskStatus`
       );
-      return res.data;
+
+      const project = res.data.data?.[0];
+      return {
+        data: project?.attributes?.tasks?.data || [],
+      };
     },
-    enabled: !!actualProjectId,
+    enabled: !!projectId,
   });
 
+  // Filteren van taken
+  const filterTasks = (tasks) => {
+    if (!tasks) return [];
 
+    return tasks.filter((task) => {
+      // Filter op zoekterm
+      if (
+        filters.search &&
+        !task.attributes.title
+          .toLowerCase()
+          .includes(filters.search.toLowerCase())
+      ) {
+        return false;
+      }
+
+      // Filter op status
+      if (filters.status !== "all") {
+        const taskStatus =
+          task.attributes.taskStatus?.data?.attributes?.statusName
+            ?.toLowerCase()
+            .replaceAll(" ", "-");
+        if (taskStatus !== filters.status) {
+          return false;
+        }
+      }
+
+      // Filter op prioriteit
+      if (
+        filters.priority !== "all" &&
+        task.attributes.priority !== filters.priority
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+  };
+
+  // Groepeer taken per status
   const groupByStatus = (tasks) => {
     const groups = {
       "to-do": [],
@@ -55,20 +104,23 @@ function KanbanBoard() {
       done: [],
     };
 
-    tasks.forEach((task) => {
-      const status = task.attributes?.taskStatus?.data?.attributes?.statusName
-        ?.toLowerCase()
-        ?.replaceAll(" ", "-");
+    const filteredTasks = filterTasks(tasks);
 
-      if (status && groups[status]) {
+    filteredTasks.forEach((task) => {
+      const status = task.attributes.taskStatus?.data?.attributes?.statusName
+        ?.toLowerCase()
+        .replaceAll(" ", "-");
+
+      // Skip backlog taken
+      if (status === "backlog") return;
+
+      if (groups[status]) {
         groups[status].push(task);
       }
     });
 
     return groups;
   };
-  
-  
 
   const grouped = tasksData
     ? groupByStatus(tasksData.data)
@@ -81,9 +133,26 @@ function KanbanBoard() {
     done: "Done",
   };
 
+  const handleTaskClick = (task) => {
+    setSelectedTask(task);
+  };
 
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
-  
+  const resetFilters = () => {
+    setFilters({
+      search: "",
+      status: "all",
+      priority: "all",
+    });
+  };
+
   return (
     <div className="kanban-wrapper">
       <Sidebar currentProjectId={projectId} />
@@ -113,7 +182,40 @@ function KanbanBoard() {
           </div>
         </header>
 
-        {/* start tasks board ===================================================*/}
+        <div className="task-filter">
+          <input
+            type="text"
+            name="search"
+            placeholder="Zoeken..."
+            value={filters.search}
+            onChange={handleFilterChange}
+          />
+
+          <select
+            name="status"
+            value={filters.status}
+            onChange={handleFilterChange}
+          >
+            <option value="all">Alle statussen</option>
+            <option value="to-do">To Do</option>
+            <option value="in-progress">In Progress</option>
+            <option value="ready-for-review">Ready for Review</option>
+            <option value="done">Done</option>
+          </select>
+
+          <select
+            name="priority"
+            value={filters.priority}
+            onChange={handleFilterChange}
+          >
+            <option value="all">Alle prioriteiten</option>
+            <option value="High">Hoog</option>
+            <option value="Medium">Middel</option>
+            <option value="Low">Laag</option>
+          </select>
+
+          <button onClick={resetFilters}>Reset</button>
+        </div>
 
         <section className="kanban-board">
           {Object.entries(grouped).map(([status, tasks]) => (
@@ -133,6 +235,7 @@ function KanbanBoard() {
                       key={task.id}
                       className="task-card"
                       style={{ "--task-color": `var(--status-${status})` }}
+                      onClick={() => handleTaskClick(task)}
                     >
                       <div className="task-header">
                         <h3 className="task-title">{task.attributes.title}</h3>
@@ -160,9 +263,25 @@ function KanbanBoard() {
             </div>
           ))}
         </section>
-
-        {/* end board ===================================================*/}
       </main>
+
+      {/* Taak details dialog */}
+      {selectedTask && (
+        <TaskDialog
+          task={selectedTask}
+          onClose={() => setSelectedTask(null)}
+          statuses={statusData?.data || []}
+        />
+      )}
+
+      {/* Nieuwe taak toevoegen */}
+      {showAddTask && (
+        <AddTaskForm
+          projectId={actualProjectId}
+          onClose={() => setShowAddTask(false)}
+          statuses={statusData?.data || []}
+        />
+      )}
     </div>
   );
 }
