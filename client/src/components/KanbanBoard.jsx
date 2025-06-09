@@ -46,16 +46,20 @@ function KanbanBoard() {
     queryKey: ["projectTasks", projectId],
     queryFn: async () => {
       const res = await axios.get(
-        `${API_URL}/projects?filters[documentId][$eq]=[tasks][populate]=taskStatus`
+        `${API_URL}/projects?filters[documentId][$eq]=${projectId}&populate[tasks][populate]=taskStatus`
       );
 
       const project = res.data.data?.[0];
+
+      console.log("Project met taken en statusen:", project);
+
       return {
         data: project?.attributes?.tasks?.data || [],
       };
     },
     enabled: !!projectId,
   });
+  
 
   // Filteren van taken
   const filterTasks = (tasks) => {
