@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import { Link, useParams } from "react-router-dom";
@@ -7,7 +6,7 @@ import axios from "axios";
 import { API_URL } from "../constants/constants";
 
 function KanbanBoard() {
-  const { projectId } = useParams(); // DIT is de documentId uit de URL
+  const { projectId } = useParams(); 
   const [setShowAddTask] = useState(false);
 
   // 🔹 Eerst: zoek het project op basis van documentId
@@ -19,6 +18,8 @@ function KanbanBoard() {
     queryKey: ["project", projectId],
     queryFn: async () => {
       const res = await axios.get(
+
+        
         `${API_URL}/projects?filters[documentId][$eq]=${projectId}`
       );
       return res.data;
@@ -83,9 +84,10 @@ function KanbanBoard() {
         <header className="header">
           <div className="project-info">
             <h1 className="project-title">
+            
               {projectLoading
                 ? "Laden..."
-                : actualProject?.attributes?.name || "Project niet gevonden"}
+                : actualProject?.name || "Project niet gevonden"}
             </h1>
           </div>
           <div className="header-actions">

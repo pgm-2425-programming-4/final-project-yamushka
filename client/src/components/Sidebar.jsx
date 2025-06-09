@@ -55,13 +55,13 @@ function Sidebar({ currentProjectId }) {
               return (
                 <li key={project.id} className="nav-item">
                   <Link
-                    to={`/projects/${project.name}`}
+                    to={`/projects/${project.documentId}`}
                     className={`nav-link${
-                      currentProjectId == project.documentId ? " active" : ""
+                      currentProjectId === project.documentId ? " active" : ""
                     }`}
                   >
                     {name || `Project ${project.documentId}`}
-                    {currentProjectId == project.documentId && (
+                    {currentProjectId === project.documentId && (
                       <span className="project-indicator" />
                     )}
                   </Link>
