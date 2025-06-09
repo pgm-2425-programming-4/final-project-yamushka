@@ -9,7 +9,7 @@ function KanbanBoard() {
   const { projectId } = useParams(); 
   const [setShowAddTask] = useState(false);
 
-  // 🔹 Eerst: zoek het project op basis van documentId
+
   const {
     data: projectData,
     isLoading: projectLoading,
@@ -30,7 +30,7 @@ function KanbanBoard() {
   const actualProject = projectData?.data?.[0];
   const actualProjectId = actualProject?.id;
 
-  // 🔹 Daarna: haal alle taken op voor dat project-ID
+
   const {
     data: tasksData,
     isLoading: tasksLoading,
@@ -39,14 +39,14 @@ function KanbanBoard() {
     queryKey: ["tasks", actualProjectId],
     queryFn: async () => {
       const res = await axios.get(
-        `${API_URL}/tasks?filters[project][id][$eq]=${actualProjectId}&populate=taskStatus,tags`
+        `${API_URL}/projects?filters[documentId][$eq]=${projectId}&populate[tasks][populate]=taskStatus`
       );
       return res.data;
     },
     enabled: !!actualProjectId,
   });
 
-  // 🔹 Taken groeperen per status
+
   const groupByStatus = (tasks) => {
     const groups = {
       "to-do": [],
@@ -54,16 +54,21 @@ function KanbanBoard() {
       "ready-for-review": [],
       done: [],
     };
+
     tasks.forEach((task) => {
-      const status = task.attributes.taskStatus?.data?.attributes?.statusName
+      const status = task.attributes?.taskStatus?.data?.attributes?.statusName
         ?.toLowerCase()
-        .replaceAll(" ", "-");
-      if (groups[status]) {
+        ?.replaceAll(" ", "-");
+
+      if (status && groups[status]) {
         groups[status].push(task);
       }
     });
+
     return groups;
   };
+  
+  
 
   const grouped = tasksData
     ? groupByStatus(tasksData.data)
@@ -76,6 +81,9 @@ function KanbanBoard() {
     done: "Done",
   };
 
+
+
+  
   return (
     <div className="kanban-wrapper">
       <Sidebar currentProjectId={projectId} />
@@ -84,7 +92,6 @@ function KanbanBoard() {
         <header className="header">
           <div className="project-info">
             <h1 className="project-title">
-            
               {projectLoading
                 ? "Laden..."
                 : actualProject?.name || "Project niet gevonden"}
@@ -105,6 +112,8 @@ function KanbanBoard() {
             </Link>
           </div>
         </header>
+
+        {/* start tasks board ===================================================*/}
 
         <section className="kanban-board">
           {Object.entries(grouped).map(([status, tasks]) => (
@@ -151,6 +160,8 @@ function KanbanBoard() {
             </div>
           ))}
         </section>
+
+        {/* end board ===================================================*/}
       </main>
     </div>
   );
