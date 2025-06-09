@@ -12,14 +12,14 @@ function Sidebar({ currentProjectId }) {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["projects"],
     queryFn: async () => {
-      const res = await axios.get(`${API_URL}/projects`);
+      const res = await axios.get(`${API_URL}/projects/`);
       return res.data;
     },
   });
 
   const mutation = useMutation({
     mutationFn: async (name) => {
-      return axios.post(`${API_URL}/projects`, {
+      return axios.post(`${API_URL}/projects/`, {
         data: { name },
       });
     },
@@ -32,27 +32,36 @@ function Sidebar({ currentProjectId }) {
 
   return (
     <aside className="sidebar">
+      {/* logo link ===================================================*/}
       <div className="logo-section">
-        <h1 className="brand-name">Kanban</h1>
+        <Link to="/" className="brand-name">
+          <h1 className="brand-name">Kanban Board</h1>
+        </Link>
       </div>
+
+      {/* start nav */}
       <nav>
         <div className="nav-section">
           <h3 className="nav-title">Projecten</h3>
+
+          {/* start lijst van projecten =======================================================*/}
+
           <ul className="nav-list">
-            {isLoading && <li>Laden...</li>}
+            {isLoading && <li>Laden</li>}
             {isError && <li>Fout bij laden</li>}
             {data?.data?.map((project) => {
               const name = project.name;
+
               return (
                 <li key={project.id} className="nav-item">
                   <Link
-                    to={`/projects/${project.id}`}
+                    to={`/projects/${project.name}`}
                     className={`nav-link${
-                      currentProjectId == project.id ? " active" : ""
+                      currentProjectId == project.documentId ? " active" : ""
                     }`}
                   >
-                    {name || `Project ${project.id}`}
-                    {currentProjectId == project.id && (
+                    {name || `Project ${project.documentId}`}
+                    {currentProjectId == project.documentId && (
                       <span className="project-indicator" />
                     )}
                   </Link>

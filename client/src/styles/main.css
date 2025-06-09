@@ -14,9 +14,14 @@ body {
 }
 
 .main-content {
-  margin-left: 280px;
+  margin-left: 8rem;
   padding: 40px;
   background: transparent;
+}
+
+.project-list {
+  margin-top: 2rem;
+    padding-left: 0.5rem;
 }
 
 .header {

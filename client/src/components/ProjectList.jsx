@@ -18,14 +18,14 @@ function ProjectList() {
 
   return (
     <main className="main-content">
-      <h1 className="project-title">Alle projecten</h1>
+      <h1 className="project-title">Alle projecten van Kanban</h1>
       <ul className="project-list">
         {data?.data?.map((project) => {
           const name = project.attributes?.name;
           return (
             <li key={project.id} className="project-item">
-              <Link to={`/projects/${project.id}`} className="project-link">
-                {name || `Project ${project.id}`}
+              <Link to={`/projects/${project.name}`} className="project-link">
+                {name || `Project ${project.name}`}
               </Link>
             </li>
           );
