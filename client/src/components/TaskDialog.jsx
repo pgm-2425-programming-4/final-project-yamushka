@@ -15,6 +15,9 @@ function TaskDialog({ task, onClose, statuses }) {
     { value: "done", label: "Done" },
   ];
 
+  // Status opties voor de dropdown
+  // waarden overeen met statusnamen in Strapi
+
   const updateMutation = useMutation({
     mutationFn: async (updatedTask) => {
       return axios.put(`${API_URL}/tasks/${task.id}`, {
@@ -40,12 +43,36 @@ function TaskDialog({ task, onClose, statuses }) {
 
   const handleStatusChange = (e) => {
     const statusValue = e.target.value;
-    const statusId = statuses.find(
-      (s) =>
-        s.attributes.statusName.toLowerCase().replaceAll(" ", "-") ===
-        statusValue
-    )?.id;
 
+    // Stap 1: statusId op basis van de geselecteerde waarde
+    let statusId;
+
+    // eerst een directe match met database statussen
+    if (Array.isArray(statuses) && statuses.length > 0) {
+      const matchingStatus = statuses.find(
+        (s) =>
+          s?.attributes?.statusName?.toLowerCase().replaceAll(" ", "-") ===
+          statusValue
+      );
+
+      if (matchingStatus) {
+        statusId = matchingStatus.id;
+      }
+    }
+
+    // geen match?????? gebruik vaste ID's als fallback
+    if (!statusId) {
+      const statusMapping = {
+        backlog: 1,
+        "to-do": 2,
+        "in-progress": 3,
+        "ready-for-review": 4,
+        done: 5,
+      };
+      statusId = statusMapping[statusValue];
+    }
+
+    // Stap 2: update taak met de nieuwe status
     if (statusId) {
       setCurrentTask({
         ...currentTask,
@@ -63,16 +90,20 @@ function TaskDialog({ task, onClose, statuses }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // verzamel de gewijzigde data voor update
     const dataToUpdate = {
       title: currentTask.attributes.title,
       description: currentTask.attributes.description,
       taskStatus: currentTask.attributes.taskStatus.data.id,
     };
 
+    // update naar de server
     updateMutation.mutate(dataToUpdate);
   };
 
-  // Bepaal huidige status
+  //  huidige status voor de dropdown
+  //  spaties om naar koppeltekens en alles naar kleine letters
   const currentStatus =
     currentTask.attributes.taskStatus?.data?.attributes?.statusName
       ?.toLowerCase()

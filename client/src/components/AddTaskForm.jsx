@@ -4,23 +4,25 @@ import axios from "axios";
 import { API_URL } from "../constants/constants";
 
 function AddTaskForm({ projectId, onClose, statuses }) {
+  // Basis taak state met standaardwaarden
   const [task, setTask] = useState({
     title: "",
     description: "",
-    status: "to-do",
+    status: "Backlog", // Standaard status
     priority: "Medium",
   });
 
   const queryClient = useQueryClient();
 
   const statusOptions = [
-    { value: "backlog", label: "Backlog" },
-    { value: "to-do", label: "To Do" },
-    { value: "in-progress", label: "In Progress" },
-    { value: "ready-for-review", label: "Ready for Review" },
-    { value: "done", label: "Done" },
+    { value: "Backlog", label: "Backlog" },
+    { value: "To Do", label: "To Do" },
+    { value: "In Progress", label: "In Progress" },
+    { value: "Ready for Review", label: "Ready for Review" },
+    { value: "Done", label: "Done" },
   ];
 
+  // mss niet nodig, ik zie later 
   const priorityOptions = [
     { value: "High", label: "Hoog" },
     { value: "Medium", label: "Middel" },
@@ -37,6 +39,10 @@ function AddTaskForm({ projectId, onClose, statuses }) {
       queryClient.invalidateQueries(["tasks"]);
       onClose();
     },
+    onError: (error) => {
+      console.error("Fout bij aanmaken taak:", error);
+      alert("Er is iets misgegaan. Probeer opnieuw.");
+    },
   });
 
   const handleChange = (e) => {
@@ -50,26 +56,52 @@ function AddTaskForm({ projectId, onClose, statuses }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Zoek status ID op basis van naam
-    const statusId = statuses.find(
-      (s) =>
-        s.attributes.statusName.toLowerCase().replaceAll(" ", "-") ===
-        task.status
-    )?.id;
+    // Stap 1: Zoek de juiste status ID
+    let statusId;
 
-    if (!statusId) {
-      alert("Status niet gevonden!");
-      return;
+    // Controleer of ik al statuses heb en zo ja, zoek de juiste status
+    if (Array.isArray(statuses) && statuses.length > 0) {
+      // Eerst zoeken op exacte match (hoofdletter of niet)
+      const matchingStatus = statuses.find((status) => {
+        if (!status?.attributes?.statusName) return false;
+        return (
+          status.attributes.statusName.toLowerCase() ===
+          task.status.toLowerCase()
+        );
+      });
+
+      if (matchingStatus) {
+        statusId = matchingStatus.id;
+      }
     }
 
+    // geen match??? vaste ID's als fallback
+    if (!statusId) {
+      // vaste ID's als backup
+      const statusMapping = {
+        Backlog: 1,
+        "To Do": 2,
+        "In Progress": 3,
+        "Ready for Review": 4,
+        Done: 5,
+      };
+
+      statusId = statusMapping[task.status];
+    }
+
+    // og steeds geen ID gevonden, gebruik Backlog (ID 1)
+    if (!statusId) {
+      statusId = 1; // Default naar Backlog
+    }
+
+    // Stap 2: een nieuw taak object
     const newTask = {
-      title: task.title,
-      description: task.description,
-      priority: task.priority,
+      title: task.title || "Untitled Task", 
+      description: task.description || "",
+      priority: task.priority || "Medium",
       project: projectId,
       taskStatus: statusId,
     };
-
     createMutation.mutate(newTask);
   };
 
