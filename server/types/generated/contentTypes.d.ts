@@ -429,6 +429,7 @@ export interface ApiStatusStatus extends Struct.CollectionTypeSchema {
       Schema.Attribute.Required &
       Schema.Attribute.Unique &
       Schema.Attribute.DefaultTo<'backlog'>;
+    tasks: Schema.Attribute.Relation<'oneToMany', 'api::task.task'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -455,7 +456,7 @@ export interface ApiTaskTask extends Struct.CollectionTypeSchema {
     project: Schema.Attribute.Relation<'manyToOne', 'api::project.project'>;
     publishedAt: Schema.Attribute.DateTime;
     taskDescription: Schema.Attribute.Blocks;
-    taskStatus: Schema.Attribute.Relation<'oneToOne', 'api::status.status'>;
+    taskStatus: Schema.Attribute.Relation<'manyToOne', 'api::status.status'>;
     taskTitle: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

@@ -1,14 +1,14 @@
-import React from "react";
-import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { API_URL } from "../constants/constants";
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { API_URL } from '../constants/constants';
 
 export default function BacklogPage() {
   const { projectId } = useParams();
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["backlogTasks", projectId],
+    queryKey: ['backlogTasks', projectId],
     queryFn: async () => {
       const res = await axios.get(
         `${API_URL}/tasks?filters[project][id][$eq]=${projectId}&filters[taskStatus][statusName][$eq]=Backlog&populate=taskStatus,tags&pagination[page]=1&pagination[pageSize]=10`
@@ -36,19 +36,12 @@ export default function BacklogPage() {
           </tr>
         </thead>
         <tbody>
-          {tasks.map((task) => (
+          {tasks.map(task => (
             <tr key={task.id}>
+              <td>{task.attributes.taskTitle || task.attributes.title || 'Untitled Task'}</td>
+              <td>{task.attributes.taskStatus?.data?.attributes?.statusName || 'Unknown'}</td>
               <td>
-                {task.attributes.taskTitle ||
-                  task.attributes.title ||
-                  "Untitled Task"}
-              </td>
-              <td>
-                {task.attributes.taskStatus?.data?.attributes?.statusName ||
-                  "Unknown"}
-              </td>
-              <td>
-                {task.attributes.tags?.data.map((tag) => (
+                {task.attributes.tags?.data.map(tag => (
                   <span key={tag.id}>{tag.attributes.name}</span>
                 ))}
               </td>

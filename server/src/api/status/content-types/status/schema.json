@@ -16,6 +16,12 @@
       "required": true,
       "unique": true,
       "default": "backlog"
+    },
+    "tasks": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::task.task",
+      "mappedBy": "taskStatus"
     }
   }
 }

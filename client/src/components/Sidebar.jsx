@@ -1,16 +1,16 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
-import axios from "axios";
-import { API_URL } from "../constants/constants";
-import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { API_URL } from '../constants/constants';
+import { useState } from 'react';
 
 function Sidebar({ currentProjectId }) {
   const [showInput, setShowInput] = useState(false);
-  const [newProjectName, setNewProjectName] = useState("");
+  const [newProjectName, setNewProjectName] = useState('');
   const queryClient = useQueryClient();
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["projects"],
+    queryKey: ['projects'],
     queryFn: async () => {
       const res = await axios.get(`${API_URL}/projects/`);
       return res.data;
@@ -18,14 +18,14 @@ function Sidebar({ currentProjectId }) {
   });
 
   const mutation = useMutation({
-    mutationFn: async (name) => {
+    mutationFn: async name => {
       return axios.post(`${API_URL}/projects/`, {
         data: { name },
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["projects"]);
-      setNewProjectName("");
+      queryClient.invalidateQueries(['projects']);
+      setNewProjectName('');
       setShowInput(false);
     },
   });
@@ -49,7 +49,7 @@ function Sidebar({ currentProjectId }) {
           <ul className="nav-list">
             {isLoading && <li>Laden</li>}
             {isError && <li>Fout bij laden</li>}
-            {data?.data?.map((project) => {
+            {data?.data?.map(project => {
               const name = project.name;
 
               return (
@@ -57,7 +57,7 @@ function Sidebar({ currentProjectId }) {
                   <Link
                     to={`/projects/${project.documentId}`}
                     className={`nav-link${
-                      currentProjectId === project.documentId ? " active" : ""
+                      currentProjectId === project.documentId ? ' active' : ''
                     }`}
                   >
                     {name || `Project ${project.documentId}`}
@@ -73,32 +73,28 @@ function Sidebar({ currentProjectId }) {
         <div className="nav-section">
           {showInput ? (
             <form
-              onSubmit={(e) => {
+              onSubmit={e => {
                 e.preventDefault();
                 if (newProjectName.trim()) {
                   mutation.mutate(newProjectName.trim());
                 }
               }}
-              style={{ marginTop: "1rem", display: "flex", gap: 8 }}
+              style={{ marginTop: '1rem', display: 'flex', gap: 8 }}
             >
               <input
                 type="text"
                 value={newProjectName}
-                onChange={(e) => setNewProjectName(e.target.value)}
+                onChange={e => setNewProjectName(e.target.value)}
                 placeholder="Projectnaam"
                 autoFocus
                 style={{
                   flex: 1,
                   borderRadius: 6,
-                  border: "1px solid #ccc",
+                  border: '1px solid #ccc',
                   padding: 6,
                 }}
               />
-              <button
-                className="btn btn-primary"
-                type="submit"
-                disabled={mutation.isLoading}
-              >
+              <button className="btn btn-primary" type="submit" disabled={mutation.isLoading}>
                 Toevoegen
               </button>
               <button
@@ -106,7 +102,7 @@ function Sidebar({ currentProjectId }) {
                 className="btn btn-secondary"
                 onClick={() => {
                   setShowInput(false);
-                  setNewProjectName("");
+                  setNewProjectName('');
                 }}
               >
                 Annuleer
@@ -116,7 +112,7 @@ function Sidebar({ currentProjectId }) {
             <button
               className="btn btn-primary"
               onClick={() => setShowInput(true)}
-              style={{ marginTop: "1rem" }}
+              style={{ marginTop: '1rem' }}
             >
               Project toevoegen
             </button>

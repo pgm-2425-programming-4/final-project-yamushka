@@ -1,176 +1,188 @@
-import React, { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import { API_URL } from "../constants/constants";
+import React, { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import { API_URL } from '../constants/constants';
 
+/**
+ * Dialog component voor het bekijken en bewerken van taakdetails
+ * @param {Object} props - Component props
+ * @param {Object} props.task - De taak die wordt weergegeven/bewerkt
+ * @param {Function} props.onClose - Functie die wordt aangeroepen als de dialog wordt gesloten
+ * @param {Array} props.statuses - Lijst met beschikbare statussen van de API
+ */
 function TaskDialog({ task, onClose, statuses }) {
+  // Initialiseer taak met consistente veldnamen
   const [currentTask, setCurrentTask] = useState(() => {
-    // Make sure we handle both old (title/description) and new (taskTitle/taskDescription) field formats
-    const taskWithConsistentFields = {
+    return {
       ...task,
       attributes: {
         ...task.attributes,
-        // If the new field doesn't exist but the old one does, copy the value
-        taskTitle: task.attributes.taskTitle || task.attributes.title || "",
-        taskDescription:
-          task.attributes.taskDescription || task.attributes.description || "",
+        taskTitle: task.attributes.taskTitle || task.attributes.title || '',
+        taskDescription: task.attributes.taskDescription || task.attributes.description || '',
       },
     };
-    return taskWithConsistentFields;
   });
+
   const queryClient = useQueryClient();
 
+  // Status opties voor de dropdown
   const statusOptions = [
-    { value: "backlog", label: "Backlog" },
-    { value: "to-do", label: "To Do" },
-    { value: "in-progress", label: "In Progress" },
-    { value: "ready-for-review", label: "Ready for Review" },
-    { value: "done", label: "Done" },
+    { value: 'backlog', label: 'Backlog' },
+    { value: 'todo', label: 'To Do' },
+    { value: 'in-progress', label: 'In Progress' },
+    { value: 'in-review', label: 'Ready for Review' },
+    { value: 'done', label: 'Done' },
   ];
 
-  // Status opties voor de dropdown
-  // waarden overeen met statusnamen in Strapi
+  /**
+   * Zoek een status ID op basis van de status waarde
+   * @param {string} statusValue - De status waarde (bijv. 'todo', 'in-progress')
+   * @returns {number|undefined} - Het gevonden status ID of undefined
+   */
+  const findStatusId = statusValue => {
+    // Probeer eerst een directe match te vinden met database statussen
+    if (Array.isArray(statuses) && statuses.length > 0) {
+      const matchingStatus = statuses.find(
+        s => s?.attributes?.statusName?.toLowerCase().replaceAll(' ', '-') === statusValue
+      );
 
+      if (matchingStatus) {
+        return matchingStatus.id;
+      }
+    }
+
+    // Als er geen match is, gebruik vaste IDs als fallback
+    const statusMapping = {
+      backlog: 1,
+      todo: 2,
+      'in-progress': 3,
+      'in-review': 4,
+      done: 5,
+    };
+
+    return statusMapping[statusValue];
+  };
+
+  // Mutation voor het bijwerken van de taak
   const updateMutation = useMutation({
-    mutationFn: async (updatedTask) => {
-      console.log("Taak aan het bijwerken:", updatedTask);
+    mutationFn: async updatedTask => {
       return axios.put(`${API_URL}/tasks/${task.id}`, {
         data: updatedTask,
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["tasks"]);
+      queryClient.invalidateQueries(['tasks']);
+      queryClient.invalidateQueries(['projectTasks']);
       onClose();
     },
-    onError: (error) => {
-      console.error("Fout bij bijwerken taak:", error);
-      console.error(
-        "Error details:",
-        error.response?.data || "Geen details beschikbaar"
-      );
-      alert(
-        "Er is iets misgegaan bij het bijwerken van de taak. Probeer opnieuw."
-      );
+    onError: error => {
+      console.error('Fout bij het bijwerken van de taak:', error);
+      alert('Er is een fout opgetreden bij het bijwerken van de taak. Probeer het opnieuw.');
     },
   });
 
-  const handleChange = (e) => {
+  /**
+   * Verwerk tekstinvoer wijzigingen
+   */
+  const handleChange = e => {
     const { name, value } = e.target;
-    setCurrentTask({
-      ...currentTask,
+    setCurrentTask(prevTask => ({
+      ...prevTask,
       attributes: {
-        ...currentTask.attributes,
+        ...prevTask.attributes,
         [name]: value,
       },
-    });
+    }));
   };
 
-  const handleStatusChange = (e) => {
+  /**
+   * Verwerk status dropdown wijzigingen
+   */
+  const handleStatusChange = e => {
     const statusValue = e.target.value;
+    const statusId = findStatusId(statusValue);
 
-    // Stap 1: statusId op basis van de geselecteerde waarde
-    let statusId;
-
-    // eerst een directe match met database statussen
-    if (Array.isArray(statuses) && statuses.length > 0) {
-      const matchingStatus = statuses.find(
-        (s) =>
-          s?.attributes?.statusName?.toLowerCase().replaceAll(" ", "-") ===
-          statusValue
-      );
-
-      if (matchingStatus) {
-        statusId = matchingStatus.id;
-      }
-    }
-
-    // geen match?????? gebruik vaste ID's als fallback
-    if (!statusId) {
-      const statusMapping = {
-        backlog: 1,
-        "to-do": 2,
-        "in-progress": 3,
-        "ready-for-review": 4,
-        done: 5,
-      };
-      statusId = statusMapping[statusValue];
-    }
-
-    // Stap 2: update taak met de nieuwe status
     if (statusId) {
-      setCurrentTask({
-        ...currentTask,
+      setCurrentTask(prevTask => ({
+        ...prevTask,
         attributes: {
-          ...currentTask.attributes,
+          ...prevTask.attributes,
           taskStatus: {
             data: {
               id: statusId,
             },
           },
         },
-      });
+      }));
     }
   };
 
-  const handleSubmit = (e) => {
+  /**
+   * Verwerk formulier indiening
+   */
+  const handleSubmit = e => {
     e.preventDefault();
 
-    // verzamel de gewijzigde data voor update - aangepast aan Strapi schema
+    // Bereid gegevens voor om bij te werken
     const dataToUpdate = {
       taskTitle: currentTask.attributes.taskTitle,
       taskDescription: currentTask.attributes.taskDescription,
-      taskStatus: {
-        connect: [{ id: currentTask.attributes.taskStatus.data.id }],
-      },
     };
 
-    // update naar de server
+    // Voeg status relatie toe indien aanwezig
+    if (currentTask.attributes?.taskStatus?.data?.id) {
+      dataToUpdate.taskStatus = currentTask.attributes.taskStatus.data.id;
+    }
+
+    // Stuur update naar server
     updateMutation.mutate(dataToUpdate);
   };
 
-  //  huidige status voor de dropdown
-  //  spaties om naar koppeltekens en alles naar kleine letters
+  // Krijg huidige status voor de dropdown
   const currentStatus =
     currentTask.attributes.taskStatus?.data?.attributes?.statusName
       ?.toLowerCase()
-      .replaceAll(" ", "-") || "";
+      .replaceAll(' ', '-') || '';
 
   return (
     <div className="task-dialog-overlay" onClick={onClose}>
-      <div className="task-dialog" onClick={(e) => e.stopPropagation()}>
+      <div className="task-dialog" onClick={e => e.stopPropagation()}>
         <div className="task-dialog-header">
-          <h2>Taak details</h2>
+          <h2>Taak Details</h2>
           <button className="close-btn" onClick={onClose}>
             ×
           </button>
         </div>
 
         <form onSubmit={handleSubmit}>
+          {/* Titel veld */}
           <div className="form-group">
             <label>Titel</label>
             <input
               type="text"
               name="taskTitle"
-              value={currentTask.attributes.taskTitle || ""}
+              value={currentTask.attributes.taskTitle || ''}
               onChange={handleChange}
               required
             />
           </div>
 
+          {/* Beschrijving veld */}
           <div className="form-group">
             <label>Beschrijving</label>
             <textarea
               name="taskDescription"
-              value={currentTask.attributes.taskDescription || ""}
+              value={currentTask.attributes.taskDescription || ''}
               onChange={handleChange}
               rows={5}
             />
           </div>
 
+          {/* Status dropdown */}
           <div className="form-group">
             <label>Status</label>
             <select value={currentStatus} onChange={handleStatusChange}>
-              {statusOptions.map((option) => (
+              {statusOptions.map(option => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -178,14 +190,12 @@ function TaskDialog({ task, onClose, statuses }) {
             </select>
           </div>
 
+          {/* Labels (tags) sectie */}
           <div className="form-group">
             <label>Labels</label>
             <div className="task-tags">
-              {currentTask.attributes.tags?.data?.map((tag) => (
-                <span
-                  key={tag.id}
-                  className={`task-tag ${tag.attributes.name.toLowerCase()}`}
-                >
+              {currentTask.attributes.tags?.data?.map(tag => (
+                <span key={tag.id} className={`task-tag ${tag.attributes.name.toLowerCase()}`}>
                   <span className="tag-dot"></span>
                   {tag.attributes.name}
                 </span>
@@ -193,19 +203,12 @@ function TaskDialog({ task, onClose, statuses }) {
             </div>
           </div>
 
+          {/* Actieknoppen */}
           <div className="task-dialog-actions">
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={updateMutation.isLoading}
-            >
-              {updateMutation.isLoading ? "Bezig..." : "Opslaan"}
+            <button type="submit" className="btn btn-primary" disabled={updateMutation.isLoading}>
+              {updateMutation.isLoading ? 'Opslaan...' : 'Opslaan'}
             </button>
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={onClose}
-            >
+            <button type="button" className="btn btn-secondary" onClick={onClose}>
               Annuleren
             </button>
           </div>

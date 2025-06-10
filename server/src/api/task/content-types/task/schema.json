@@ -18,7 +18,7 @@
     },
     "taskStatus": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "manyToOne",
       "target": "api::status.status"
     },
     "project": {

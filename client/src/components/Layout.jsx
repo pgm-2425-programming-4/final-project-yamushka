@@ -1,5 +1,5 @@
-import Sidebar from "./Sidebar";
-import { Outlet, useParams } from "react-router-dom";
+import Sidebar from './Sidebar';
+import { Outlet, useParams } from 'react-router-dom';
 
 function Layout() {
   const { projectId } = useParams();
