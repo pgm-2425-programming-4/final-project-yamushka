@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -39,7 +38,11 @@ export default function BacklogPage() {
         <tbody>
           {tasks.map((task) => (
             <tr key={task.id}>
-              <td>{task.attributes.title}</td>
+              <td>
+                {task.attributes.taskTitle ||
+                  task.attributes.title ||
+                  "Untitled Task"}
+              </td>
               <td>
                 {task.attributes.taskStatus?.data?.attributes?.statusName ||
                   "Unknown"}

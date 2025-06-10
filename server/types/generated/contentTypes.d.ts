@@ -376,6 +376,7 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
 export interface ApiProjectProject extends Struct.CollectionTypeSchema {
   collectionName: 'projects';
   info: {
+    description: '';
     displayName: 'Project';
     pluralName: 'projects';
     singularName: 'project';
@@ -451,6 +452,7 @@ export interface ApiTaskTask extends Struct.CollectionTypeSchema {
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::task.task'> &
       Schema.Attribute.Private;
+    project: Schema.Attribute.Relation<'manyToOne', 'api::project.project'>;
     publishedAt: Schema.Attribute.DateTime;
     taskDescription: Schema.Attribute.Blocks;
     taskStatus: Schema.Attribute.Relation<'oneToOne', 'api::status.status'>;

@@ -8,36 +8,31 @@ import TaskDialog from "./TaskDialog";
 import AddTaskForm from "./AddTaskForm";
 
 function KanbanBoard() {
-  // URL parameter voor het project ID
   const { projectId } = useParams();
-  
-  // State voor UI interactie
-  const [showAddTask, setShowAddTask] = useState(false);  // Toont het "Taak toevoegen" dialoog
-  const [selectedTask, setSelectedTask] = useState(null); // Geselecteerde taak voor bewerken
-  
-  // Filter instellingen voor zoeken en filteren
+
+
+  const [showAddTask, setShowAddTask] = useState(false); 
+  const [selectedTask, setSelectedTask] = useState(null); 
+
+
   const [filters, setFilters] = useState({
-    search: "",     // Zoektekst voor taken
-    status: "all",  // Filter op status (all, to-do, in-progress, etc.)
-    priority: "all", // Filter op prioriteit (all, High, Medium, Low)
+    search: "", 
+    status: "all", 
   });
 
   // Haal statussen op van de server
-  const {
-    data: statusData,
-  } = useQuery({
+  const { data: statusData } = useQuery({
     queryKey: ["statuses"],
     queryFn: async () => {
       try {
         const res = await axios.get(`${API_URL}/statuses`);
-        return res.data.data; // Alleen de data array teruggeven
+        return res.data.data; 
       } catch (error) {
         console.error("Error bij ophalen statussen:", error);
         return []; // Lege array bij fouten
       }
     },
   });
-
 
   const { data: projectData, isLoading: projectLoading } = useQuery({
     queryKey: ["project", projectId],
@@ -53,7 +48,6 @@ function KanbanBoard() {
   const actualProject = projectData?.data?.[0];
   const actualProjectId = actualProject?.id;
 
-
   const { data: tasksData, isLoading: tasksLoading } = useQuery({
     queryKey: ["projectTasks", projectId],
     queryFn: async () => {
@@ -62,7 +56,27 @@ function KanbanBoard() {
       );
 
       const project = res.data.data?.[0];
+
+
       console.log("Project met taken en statusen:", project);
+      const firstTask = project?.attributes?.tasks?.data?.[0];
+      if (firstTask) {
+        console.log("Eerste taak structuur:", firstTask.attributes);
+
+        if (firstTask.attributes.title && !firstTask.attributes.taskTitle) {
+          console.warn(
+            "Taak gebruikt 'title' in plaats van 'taskTitle'"
+          );
+        }
+        if (
+          firstTask.attributes.description &&
+          !firstTask.attributes.taskDescription
+        ) {
+          console.warn(
+            "Taak gebruikt 'description' in plaats van 'taskDescription'"
+          );
+        }
+      }
 
       return {
         data: project?.attributes?.tasks?.data || [],
@@ -79,7 +93,7 @@ function KanbanBoard() {
     return tasks.filter((task) => {
       // Filter 1: Zoektekst filter - Controleer of de titel de zoektekst bevat
       if (filters.search) {
-        const taskTitle = task.attributes.title.toLowerCase();
+        const taskTitle = task.attributes.taskTitle?.toLowerCase() || "";
         const searchText = filters.search.toLowerCase();
         if (!taskTitle.includes(searchText)) {
           return false; // Taak bevat zoekterm niet, dus niet tonen
@@ -88,52 +102,43 @@ function KanbanBoard() {
 
       // Filter 2: Status filter - Controleer of de taak de geselecteerde status heeft
       if (filters.status !== "all") {
-        const taskStatus = task.attributes.taskStatus?.data?.attributes?.statusName
-          ?.toLowerCase()
-          .replaceAll(" ", "-");
+        const taskStatus =
+          task.attributes.taskStatus?.data?.attributes?.statusName
+            ?.toLowerCase()
+            .replaceAll(" ", "-");
         if (taskStatus !== filters.status) {
           return false; // Taak heeft niet de juiste status, dus niet tonen
         }
       }
 
-      // Filter 3: Prioriteit filter - Controleer of de taak de geselecteerde prioriteit heeft
-      if (filters.priority !== "all" && task.attributes.priority !== filters.priority) {
-        return false; // Taak heeft niet de juiste prioriteit, dus niet tonen
-      }
-
-      return true; // Taak voldoet aan alle filters, dus tonen
+      return true; 
     });
   };
 
-  /**
-   * Groepeer taken per kolom/status voor het Kanban bord
-   * 
-   * Deze functie neemt de gefilterde taken en groepeert ze in kolommen op basis van hun status.
-   * Taken met status "Backlog" worden uitgesloten van het Kanban bord.
-   */
+
   const groupByStatus = (tasks) => {
-    // Definieer de kolommen voor het Kanban bord
+
     const groups = {
-      "to-do": [],        // Te doen
-      "in-progress": [],  // In uitvoering
-      "ready-for-review": [], // Klaar voor review
-      "done": [],        // Afgerond
+      "to-do": [], 
+      "in-progress": [], 
+      "ready-for-review": [],
+      done: [], 
     };
 
-    // Filter de taken volgens de huidige filter instellingen
+
     const filteredTasks = filterTasks(tasks);
 
-    // Verdeel de taken over de kolommen
+
     filteredTasks.forEach((task) => {
-      // Bepaal de status van de taak en zet deze om naar het juiste formaat
+
       const status = task.attributes.taskStatus?.data?.attributes?.statusName
         ?.toLowerCase()
         .replaceAll(" ", "-");
 
-      // Backlog taken tonen we niet op het Kanban bord
+
       if (status === "backlog") return;
 
-      // Voeg taak toe aan de juiste kolom als die kolom bestaat
+ 
       if (groups[status]) {
         groups[status].push(task);
       }
@@ -153,18 +158,12 @@ function KanbanBoard() {
     done: "Done",
   };
 
-  /**
-   * Event handler voor het klikken op een taak
-   * Opent het dialoogvenster met taakdetails
-   */
+
   const handleTaskClick = (task) => {
     setSelectedTask(task);
   };
 
-  /**
-   * Event handler voor het wijzigen van filter instellingen
-   * Werkt voor zowel zoektekst, status als prioriteit filters
-   */
+
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters((prev) => ({
@@ -173,14 +172,11 @@ function KanbanBoard() {
     }));
   };
 
-  /**
-   * Reset alle filters naar hun initiele waarden
-   */
+
   const resetFilters = () => {
     setFilters({
       search: "",
       status: "all",
-      priority: "all",
     });
   };
 
@@ -234,17 +230,6 @@ function KanbanBoard() {
             <option value="done">Done</option>
           </select>
 
-          <select
-            name="priority"
-            value={filters.priority}
-            onChange={handleFilterChange}
-          >
-            <option value="all">Alle prioriteiten</option>
-            <option value="High">Hoog</option>
-            <option value="Medium">Middel</option>
-            <option value="Low">Laag</option>
-          </select>
-
           <button onClick={resetFilters}>Reset</button>
         </div>
 
@@ -269,12 +254,11 @@ function KanbanBoard() {
                       onClick={() => handleTaskClick(task)}
                     >
                       <div className="task-header">
-                        <h3 className="task-title">{task.attributes.title}</h3>
-                        <div
-                          className={`task-priority ${task.attributes.priority?.toLowerCase()}`}
-                        >
-                          {task.attributes.priority?.[0]}
-                        </div>
+                        <h3 className="task-title">
+                          {task.attributes.taskTitle ||
+                            task.attributes.title ||
+                            "Untitled Task"}
+                        </h3>
                       </div>
                       <div className="task-meta">
                         {task.attributes.tags?.data?.map((tag) => (
@@ -307,6 +291,7 @@ function KanbanBoard() {
       {showAddTask && (
         <AddTaskForm
           projectId={actualProjectId}
+          projectDocumentId={projectId}
           onClose={() => setShowAddTask(false)}
           statuses={statusData || []}
         />

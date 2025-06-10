@@ -4,7 +4,20 @@ import axios from "axios";
 import { API_URL } from "../constants/constants";
 
 function TaskDialog({ task, onClose, statuses }) {
-  const [currentTask, setCurrentTask] = useState(task);
+  const [currentTask, setCurrentTask] = useState(() => {
+    // Make sure we handle both old (title/description) and new (taskTitle/taskDescription) field formats
+    const taskWithConsistentFields = {
+      ...task,
+      attributes: {
+        ...task.attributes,
+        // If the new field doesn't exist but the old one does, copy the value
+        taskTitle: task.attributes.taskTitle || task.attributes.title || "",
+        taskDescription:
+          task.attributes.taskDescription || task.attributes.description || "",
+      },
+    };
+    return taskWithConsistentFields;
+  });
   const queryClient = useQueryClient();
 
   const statusOptions = [
@@ -20,6 +33,7 @@ function TaskDialog({ task, onClose, statuses }) {
 
   const updateMutation = useMutation({
     mutationFn: async (updatedTask) => {
+      console.log("Taak aan het bijwerken:", updatedTask);
       return axios.put(`${API_URL}/tasks/${task.id}`, {
         data: updatedTask,
       });
@@ -27,6 +41,16 @@ function TaskDialog({ task, onClose, statuses }) {
     onSuccess: () => {
       queryClient.invalidateQueries(["tasks"]);
       onClose();
+    },
+    onError: (error) => {
+      console.error("Fout bij bijwerken taak:", error);
+      console.error(
+        "Error details:",
+        error.response?.data || "Geen details beschikbaar"
+      );
+      alert(
+        "Er is iets misgegaan bij het bijwerken van de taak. Probeer opnieuw."
+      );
     },
   });
 
@@ -91,11 +115,13 @@ function TaskDialog({ task, onClose, statuses }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // verzamel de gewijzigde data voor update
+    // verzamel de gewijzigde data voor update - aangepast aan Strapi schema
     const dataToUpdate = {
-      title: currentTask.attributes.title,
-      description: currentTask.attributes.description,
-      taskStatus: currentTask.attributes.taskStatus.data.id,
+      taskTitle: currentTask.attributes.taskTitle,
+      taskDescription: currentTask.attributes.taskDescription,
+      taskStatus: {
+        connect: [{ id: currentTask.attributes.taskStatus.data.id }],
+      },
     };
 
     // update naar de server
@@ -124,8 +150,8 @@ function TaskDialog({ task, onClose, statuses }) {
             <label>Titel</label>
             <input
               type="text"
-              name="title"
-              value={currentTask.attributes.title || ""}
+              name="taskTitle"
+              value={currentTask.attributes.taskTitle || ""}
               onChange={handleChange}
               required
             />
@@ -134,8 +160,8 @@ function TaskDialog({ task, onClose, statuses }) {
           <div className="form-group">
             <label>Beschrijving</label>
             <textarea
-              name="description"
-              value={currentTask.attributes.description || ""}
+              name="taskDescription"
+              value={currentTask.attributes.taskDescription || ""}
               onChange={handleChange}
               rows={5}
             />

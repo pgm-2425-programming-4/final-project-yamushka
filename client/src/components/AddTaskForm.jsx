@@ -3,13 +3,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { API_URL } from "../constants/constants";
 
-function AddTaskForm({ projectId, onClose, statuses }) {
-  // Basis taak state met standaardwaarden
+function AddTaskForm({ projectId, projectDocumentId, onClose, statuses }) {
+// strapi veldnamen
   const [task, setTask] = useState({
-    title: "",
-    description: "",
+    taskTitle: "",
+    taskDescription: "",
     status: "Backlog", // Standaard status
-    priority: "Medium",
   });
 
   const queryClient = useQueryClient();
@@ -22,26 +21,51 @@ function AddTaskForm({ projectId, onClose, statuses }) {
     { value: "Done", label: "Done" },
   ];
 
-  // mss niet nodig, ik zie later 
-  const priorityOptions = [
-    { value: "High", label: "Hoog" },
-    { value: "Medium", label: "Middel" },
-    { value: "Low", label: "Laag" },
-  ];
-
   const createMutation = useMutation({
     mutationFn: async (newTask) => {
-      return axios.post(`${API_URL}/tasks`, {
-        data: newTask,
-      });
+      console.log("API aanroep naar:", `${API_URL}/tasks`);
+      console.log("Data die we sturen:", { data: newTask });
+
+      try {
+        const response = await axios.post(`${API_URL}/tasks`, {
+          data: newTask,
+        });
+        console.log("Succesvol aangemaakt:", response.data);
+        return response;
+      } catch (error) {
+        console.error("API fout:", error);
+  
+        throw error;
+      }
     },
-    onSuccess: () => {
+    onSuccess: async (response) => {
+      console.log("Taak succesvol aangemaakt:", response.data);
+
+      // validatie dat de taak succesvol is gekoppeld
+      const newTask = response.data.data;
+      console.log("Nieuwe taak aangemaakt met ID:", newTask.id);
+
+      // relatie is automatisch gemaakt in Strapi
+
+
+      // Update de UI query cache
       queryClient.invalidateQueries(["tasks"]);
+      queryClient.invalidateQueries([
+        "projectTasks",
+        projectDocumentId || projectId,
+      ]);
       onClose();
     },
     onError: (error) => {
       console.error("Fout bij aanmaken taak:", error);
-      alert("Er is iets misgegaan. Probeer opnieuw.");
+      console.error(
+        "Error details:",
+        error.response?.data || "Geen details beschikbaar"
+      );
+      const errorMessage =
+        error.response?.data?.error?.message ||
+        "Er is iets misgegaan. Probeer opnieuw.";
+      alert(`Fout: ${errorMessage}`);
     },
   });
 
@@ -56,7 +80,7 @@ function AddTaskForm({ projectId, onClose, statuses }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Stap 1: Zoek de juiste status ID
+    // Stap 1: juiste status ID
     let statusId;
 
     // Controleer of ik al statuses heb en zo ja, zoek de juiste status
@@ -94,14 +118,40 @@ function AddTaskForm({ projectId, onClose, statuses }) {
       statusId = 1; // Default naar Backlog
     }
 
-    // Stap 2: een nieuw taak object
+    // Controleren of we een geldig projectId hebben
+    if (!projectId) {
+      console.error("Fout: Geen projectId beschikbaar");
+      console.log("ProjectId:", projectId);
+      console.log("ProjectDocumentId:", projectDocumentId);
+      alert("Er is geen project geselecteerd. Probeer opnieuw.");
+      return;
+    }
+
+    // Stap 2: een nieuw taak object aangepast om overeen te komen met Strapi schema
+    // Zorg ervoor dat we altijd een titel hebben
+    const taskTitle = task.taskTitle.trim();
+    if (!taskTitle) {
+      alert("Titel is verplicht. Vul een titel in.");
+      return;
+    }
+
+    // In Strapi V4, relations need to be formatted with connect syntax
     const newTask = {
-      title: task.title || "Untitled Task", 
-      description: task.description || "",
-      priority: task.priority || "Medium",
-      project: projectId,
-      taskStatus: statusId,
+      taskTitle: taskTitle,
+      taskDescription: task.taskDescription || "",
+      // Nu kunnen we zowel taskStatus als project relaties instellen
+      taskStatus: {
+        connect: [{ id: statusId }],
+      },
+      project: {
+        connect: [{ id: projectId }],
+      },
     };
+
+    // Log what we're trying to create
+    console.log("Nieuw taak object:", newTask);
+
+    console.log("Taak aan het aanmaken:", newTask);
     createMutation.mutate(newTask);
   };
 
@@ -120,8 +170,8 @@ function AddTaskForm({ projectId, onClose, statuses }) {
             <label>Titel</label>
             <input
               type="text"
-              name="title"
-              value={task.title}
+              name="taskTitle"
+              value={task.taskTitle}
               onChange={handleChange}
               required
             />
@@ -130,8 +180,8 @@ function AddTaskForm({ projectId, onClose, statuses }) {
           <div className="form-group">
             <label>Beschrijving</label>
             <textarea
-              name="description"
-              value={task.description}
+              name="taskDescription"
+              value={task.taskDescription}
               onChange={handleChange}
               rows={5}
             />
@@ -141,21 +191,6 @@ function AddTaskForm({ projectId, onClose, statuses }) {
             <label>Status</label>
             <select name="status" value={task.status} onChange={handleChange}>
               {statusOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label>Prioriteit</label>
-            <select
-              name="priority"
-              value={task.priority}
-              onChange={handleChange}
-            >
-              {priorityOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
