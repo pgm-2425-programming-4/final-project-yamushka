@@ -1,17 +1,14 @@
+
+import { Outlet } from '@tanstack/react-router';
 import Sidebar from './Sidebar';
-import { Outlet, useParams } from 'react-router-dom';
 
-function Layout() {
-  const { projectId } = useParams();
-
+export default function Layout() {
   return (
-    <div className="kanban-wrapper">
-      <Sidebar currentProjectId={projectId} />
-      <main className="main-content">
+    <div style={{ display: 'flex' }}>
+      <Sidebar />
+      <main style={{ flexGrow: 1, padding: '2rem' }}>
         <Outlet />
       </main>
     </div>
   );
 }
-
-export default Layout;
