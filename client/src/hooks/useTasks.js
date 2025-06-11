@@ -26,7 +26,7 @@ function useTasks(projectId, filters = { search: '', status: 'all' }) {
         return { data: [] };
       }
     },
-    enabled: !!projectId, 
+    enabled: !!projectId,
   });
 
   // Filter functies
