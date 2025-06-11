@@ -1,14 +1,12 @@
-
-import { createRootRoute, createRoute, createRouter, Outlet } from '@tanstack/react-router';
-
+import { createRootRoute, createRoute, createRouter } from '@tanstack/react-router';
 import Layout from '../components/Layout';
-import HomePage from '../pages/HomePage';
 import ProjectPage from '../pages/ProjectPage';
+import HomePage from '../pages/HomePage';
 
-console.log('✅ [ROUTES] Router setup wordt geladen');
+console.log('[ROUTES] Router setup wordt geladen');
 
 const rootRoute = createRootRoute({
-  component: () => <Layout />, 
+  component: Layout,
 });
 
 const homeRoute = createRoute({
@@ -23,8 +21,17 @@ const projectRoute = createRoute({
   component: ProjectPage,
 });
 
-const routeTree = rootRoute.addChildren([homeRoute, projectRoute]);
+const backlogRoute = createRoute({
+  path: '/projects/$documentId/backlog',
+  getParentRoute: () => rootRoute,
+  component: () => import('../pages/BacklogPage').then(mod => mod.default),
+});
 
-export const router = createRouter({ routeTree });
+const routeTree = rootRoute.addChildren([homeRoute, projectRoute, backlogRoute]);
 
-console.log(' [ROUTES] Router is succesvol geëxporteerd');
+export const router = createRouter({
+  routeTree,
+  defaultPreload: 'intent',
+});
+
+console.log('[ROUTES] Router is succesvol geëxporteerd');

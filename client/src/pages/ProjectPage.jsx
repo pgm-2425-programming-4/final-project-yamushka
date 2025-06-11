@@ -1,7 +1,7 @@
 import { useParams } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { fetchTasksByProject } from '../api/tasks.js';
-import './kanbanBoard.css';
+import '../styles/main.css';
 
 export default function ProjectPage() {
   const { documentId } = useParams({ strict: false });
@@ -17,7 +17,7 @@ export default function ProjectPage() {
   });
 
   const grouped = {
-    Backlog: [],
+
     Todo: [],
     'In progress': [],
     'In review': [],
@@ -25,9 +25,11 @@ export default function ProjectPage() {
   };
 
   tasks?.forEach(task => {
-    const status = task.attributes.taskStatus?.data?.attributes?.statusName || 'Backlog';
-    if (grouped[status]) {
-      grouped[status].push(task);
+    if (task && task.attributes) {
+      const status = task.attributes.taskStatus?.data?.attributes?.statusName || 'Backlog';
+      if (grouped[status]) {
+        grouped[status].push(task);
+      }
     }
   });
 
