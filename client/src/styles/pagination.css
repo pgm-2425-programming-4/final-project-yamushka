@@ -1,0 +1,62 @@
+/* filepath: /Users/jj/Desktop/final-project-yamushka/client/src/styles/pagination.css */
+.pagination {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 0;
+  margin-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.pagination-info {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.pagination-button {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  color: #495057;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  border-radius: 4px;
+  cursor: pointer;
+  min-width: 2rem;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pagination-button:hover:not(:disabled) {
+  background-color: #e9ecef;
+  border-color: #dee2e6;
+  color: #212529;
+}
+
+.pagination-button.active {
+  background-color: #3498db;
+  border-color: #3498db;
+  color: white;
+}
+
+.pagination-button:disabled {
+  color: #adb5bd;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .pagination {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pagination-controls {
+    flex-wrap: wrap;
+  }
+}

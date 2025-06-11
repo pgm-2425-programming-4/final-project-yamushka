@@ -2,8 +2,9 @@ import { createRootRoute, createRoute, createRouter } from '@tanstack/react-rout
 import Layout from '../components/Layout';
 import ProjectPage from '../pages/ProjectPage';
 import HomePage from '../pages/HomePage';
+import BacklogPage from '../pages/BacklogPage';
 
-console.log('[ROUTES] Router setup wordt geladen');
+console.log('setup wordt geladen');
 
 const rootRoute = createRootRoute({
   component: Layout,
@@ -24,7 +25,7 @@ const projectRoute = createRoute({
 const backlogRoute = createRoute({
   path: '/projects/$documentId/backlog',
   getParentRoute: () => rootRoute,
-  component: () => import('../pages/BacklogPage').then(mod => mod.default),
+  component: BacklogPage,
 });
 
 const routeTree = rootRoute.addChildren([homeRoute, projectRoute, backlogRoute]);
@@ -34,4 +35,4 @@ export const router = createRouter({
   defaultPreload: 'intent',
 });
 
-console.log('[ROUTES] Router is succesvol geëxporteerd');
+

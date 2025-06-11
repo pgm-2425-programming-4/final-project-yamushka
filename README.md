@@ -1,37 +1,65 @@
-# Tasks kanban
+# Kanban Project Management System
+by joanna
 
-server = npm run dev
+## Project Structure
 
-Een dynamisch task management platform met:
--  3 folders = client (react), server (strapi), design 
+- **client**: React frontend application
+- **server**: Strapi backend for data management
 
- Werkt:
-- Strapi backend correct opgezet met `Task` en `TaskStatus`
-- API-filter op status `"Backlog"` 
-- Componentstructuur: `PaginatedBacklog`, `Backlog`, `Pagination`
-- Frontend in React
-  - Axios voor data-ophaling
-  - Tanstack Query voor state management
-  - Statische HTML/CSS volledig geïntegreerd
- 
-deployed = netflify 
+## Features
 
+- Project listing in the sidebar
+- Kanban board view with columns for different task statuses
+- Dedicated Backlog view 
+- Task creation functionality
+- Modern, clean UI
 
-render = https://jamming-api.onrender.com/admin
+## Technology Stack
 
+### Frontend
 
-RENDER = 
-database  = jamming (evv blijft zelfde) externe database = log via github
-jamming API is succesvol deployed 
+- React for UI components
+- TanStack Router for routing
+- TanStack Query for data fetching and state management
+- Modern CSS for styling
 
-nieuwe commits zijn automatisch opnieuw deployed 
+### Backend
 
+- Strapi
+- PostgreSQL database
+- RESTful API
 
-DATABASE_SSL=false   = lokaal
-database.js aanpassen 
+## Data Structure
 
-postgress.app  = lokaal = env aanpassen naar lokale credentials 
-(npm i pg) en dan (npm run develop) wordt doorgestuurd naar http://localhost:1337/admin/auth/register-admin
+- **Projects**: Collection of related tasks
+- **Tasks**: Individual work items with title, description, and status
+- **Statuses**: Task states (Backlog, Todo, In Progress, In Review, Done)
 
+## Running Locally
+
+### Backend (Server)
+
+```bash
+cd server
+npm install
+npm run develop
+```
+
+The Strapi admin panel will be available at http://localhost:1337/admin
+
+### Frontend (Client)
+
+```bash
+cd client
+npm install
+npm run dev
+```
+
+The frontend application will be available at http://localhost:5173
+
+## Deployment
+
+- Frontend: Netlify
+- Backend API: Render (https://jammin-playground.onrender.com)
 
 

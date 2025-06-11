@@ -23,21 +23,20 @@ export default function Sidebar() {
         {projects?.length === 0 && <p>No projects found</p>}
         {projects?.map(project => {
           const title = project.name || 'Untitled';
-          const documentId = project.documentId;
-          if (!documentId) return null;
+          const projectDocumentId = project.documentId;
 
           return (
             <li key={project.id} style={{ marginBottom: '0.5rem' }}>
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <Link
-                  to={`/projects/${documentId}`}
+                  to={`/projects/${projectDocumentId}`}
                   onClick={() => console.log(`📁 [Clicked project]: ${title}\n`, project)}
                   style={{ marginBottom: '4px' }}
                 >
                   {title}
                 </Link>
                 <Link
-                  to={`/projects/${documentId}/backlog`}
+                  to={`/projects/${projectDocumentId}/backlog`}
                   style={{ fontSize: '0.85em', paddingLeft: '12px', color: '#666' }}
                 >
                   Backlog →
