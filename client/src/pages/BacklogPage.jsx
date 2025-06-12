@@ -1,11 +1,11 @@
 import { useParams } from '@tanstack/react-router';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { fetchTasksByProject } from '../api/tasks.js';
+import { fetchProjectByDocumentId } from '../api/projects.js';
 import { useState } from 'react';
 import TaskForm from '../components/TaskForm';
 import TaskDialog from '../components/TaskDialog';
 import Pagination from '../components/Pagination';
-import { createTask } from '../api/createTask';
 import '../styles/main.css';
 import '../styles/backlog.css';
 
@@ -14,9 +14,13 @@ export default function BacklogPage() {
   const [showForm, setShowForm] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isCreatingTestTask, setIsCreatingTestTask] = useState(false);
-  const [testTaskResult, setTestTaskResult] = useState(null);
-  const queryClient = useQueryClient();
+
+  // Haal eerst het project op om de naam te krijgen
+  const { data: project, isLoading: projectLoading } = useQuery({
+    queryKey: ['project', documentId],
+    queryFn: () => fetchProjectByDocumentId(documentId),
+    enabled: !!documentId,
+  });
 
   const {
     data: tasks,
@@ -28,7 +32,7 @@ export default function BacklogPage() {
     enabled: !!documentId,
   });
 
-  // Filter to only show Backlog tasks
+  // Laat alleen backlog taken zien
   const backlogTasks = tasks?.filter(task => {
     if (!task) return false;
 
@@ -51,14 +55,14 @@ export default function BacklogPage() {
       `Taak ${task.id} project check: ${isForCurrentProject ? 'JA' : 'NEE'} (taak project: ${task.project?.id}, huidig: ${documentId})`
     );
 
-    //  een taak als een backlog-taak als:
+    // Een taak als een backlog-taak als:
     // 1. De status "Backlog" is, OF
     // 2. Er is geen status toegewezen
     const isBacklogTask = status === 'Backlog' || !status;
 
     // Extra debug info
     if (isBacklogTask) {
-      console.log('🟢 BACKLOG TAAK GEVONDEN:', task.taskTitle);
+      console.log('Backlog taak gevonden:', task.taskTitle);
     }
 
     // Debuggen: alle statuswaarden tonen
@@ -71,16 +75,16 @@ export default function BacklogPage() {
     return true;
   });
 
-  // Calculate pagination
+  // Bereken paginering
   const totalBacklogTasks = backlogTasks?.length || 0;
-  const itemsPerPage = 10; // Default: 10 items per page
+  const itemsPerPage = 10; // Standaard: 10 items per pagina
 
-  // Get current page items
+  // Haal huidige pagina items op
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = backlogTasks?.slice(indexOfFirstItem, indexOfLastItem) || [];
 
-  // Handle page change
+  // Ga naar andere pagina
   const handlePageChange = pageNumber => {
     setCurrentPage(pageNumber);
     console.log(
@@ -88,84 +92,24 @@ export default function BacklogPage() {
     );
   };
 
-  if (isLoading) return <p>Loading backlog tasks...</p>;
-  if (error) return <p>Error loading backlog tasks</p>;
-
-  // Altijd debug info tonen
-  console.log('Rendering BacklogPage with:', {
-    documentId,
-    tasks: tasks?.length || 0,
-    backlogTasks: backlogTasks?.length || 0,
-    isLoading,
-    error: error ? error.toString() : null,
-  });
+  if (projectLoading || isLoading) return <p>Backlog taken laden...</p>;
+  if (error) return <p>Fout bij laden backlog taken</p>;
+  if (!project) return <p>Project niet gevonden</p>;
 
   return (
     <div className="backlog-container">
       <div className="backlog-header">
-        <h1>Backlog voor Project {documentId}</h1>
-        <h2>Backlog Taken</h2>
-        <div className="debug-info">
-          <h3>Debug Info:</h3>
-          <p>Project ID: {documentId}</p>
-          <p>
-            Taken geladen:{' '}
-            {isLoading
-              ? 'Bezig met laden...'
-              : tasks
-                ? `Ja, ${tasks.length} taken gevonden`
-                : 'Nee'}
-          </p>
-          <p>Backlog taken: {backlogTasks?.length || 0}</p>
-          {error && <p className="debug-error">Error: {error.toString()}</p>}
-
-          <div>
-            <button
-              onClick={async () => {
-                setIsCreatingTestTask(true);
-                try {
-                  const newTask = await createTask({
-                    title: `Test taak ${Date.now().toString().slice(-4)}`,
-                    description: 'Dit is een automatisch gegenereerde testtaak',
-                    projectId: parseInt(documentId),
-                    statusId: 2, // Backlog status
-                  });
-                  console.log('TEST TAAK AANGEMAAKT:', newTask);
-                  setTestTaskResult({ success: true, data: newTask });
-                  queryClient.invalidateQueries(['tasks', documentId]);
-                } catch (err) {
-                  console.error('FOUT BIJ AANMAKEN TEST TAAK:', err);
-                  setTestTaskResult({ success: false, error: err.toString() });
-                } finally {
-                  setIsCreatingTestTask(false);
-                }
-              }}
-              disabled={isCreatingTestTask}
-              className="test-task-button"
-            >
-              {isCreatingTestTask ? 'Bezig...' : 'Test taak aanmaken'}
-            </button>
-
-            {testTaskResult && (
-              <div className={`test-task-result ${testTaskResult.success ? 'success' : 'error'}`}>
-                {testTaskResult.success ? (
-                  <p>Taak aangemaakt met ID: {testTaskResult.data.id}</p>
-                ) : (
-                  <p>Fout: {testTaskResult.error}</p>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
+        <h1>{project?.name || 'Project'}</h1>
         <button className="add-task-button" onClick={() => setShowForm(true)}>
           + Add Backlog Task
         </button>
       </div>
 
-      {showForm && (
+      {showForm && project && (
         <div className="form-overlay">
           <TaskForm
-            projectId={parseInt(documentId)}
+            projectId={project.id}
+            projectDocumentId={documentId}
             onSuccess={() => setShowForm(false)}
             onCancel={() => setShowForm(false)}
           />
@@ -180,25 +124,6 @@ export default function BacklogPage() {
             <h3>Geen backlog taken gevonden</h3>
             <p>Er zijn momenteel geen taken met de status "Backlog" voor dit project.</p>
             <p>Gebruik de "Add Backlog Task" knop om een nieuwe taak toe te voegen.</p>
-            <p>
-              Of gebruik de "Test taak aanmaken" knop hierboven om snel een testtaak aan te maken.
-            </p>
-
-            <div className="all-tasks-debug">
-              <h4>Alle taken in de database (ongeacht project):</h4>
-              {tasks && tasks.length > 0 ? (
-                <ul className="all-tasks-list">
-                  {tasks.map(task => (
-                    <li key={task.id} className="all-tasks-item">
-                      <strong>{task.taskTitle}</strong> - Project: {task.project?.name || 'Geen'},
-                      Status: {task.taskStatus?.statusName || 'Geen'}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>Geen taken gevonden in de database.</p>
-              )}
-            </div>
           </div>
         )}
         {currentItems.map(task => (
@@ -213,10 +138,10 @@ export default function BacklogPage() {
             <h4>{task.taskTitle}</h4>
             <p>
               {!task.taskDescription
-                ? 'No description'
+                ? 'Geen beschrijving'
                 : typeof task.taskDescription === 'string'
                   ? task.taskDescription
-                  : 'Click to view description'}
+                  : 'Klik om beschrijving te bekijken'}
             </p>
             <div className="task-meta">
               <p>

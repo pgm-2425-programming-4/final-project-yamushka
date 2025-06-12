@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import StatusSelector from './StatusSelector';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { fetchStatuses } from '../api/statuses';
 import { updateTask } from '../api/updateTask';
@@ -15,7 +14,7 @@ export default function TaskDialog({ task, onClose }) {
 
   const queryClient = useQueryClient();
 
-  // Fetch all available statuses for editing
+  // Haal alle beschikbare statussen op voor het bewerken
   const {
     data: statuses,
     isLoading: statusesLoading,
@@ -39,7 +38,7 @@ export default function TaskDialog({ task, onClose }) {
 
       console.log('Task updated successfully:', updatedTask.id);
 
-      // Invalidate and refetch tasks using project documentId
+      // Vernieuw de takenlijst met het project documentId
       const projectDocumentId = task.project?.documentId;
       if (projectDocumentId) {
         queryClient.invalidateQueries(['tasks', projectDocumentId]);
@@ -55,7 +54,7 @@ export default function TaskDialog({ task, onClose }) {
   };
 
   const handleCancelEdit = () => {
-    // Reset form values to original task values
+    // Zet formulier waarden terug naar originele taak waarden
     setTitle(task?.taskTitle || '');
     setDescription(task?.taskDescription || '');
     setStatusId(task?.taskStatus?.id || '');
@@ -63,18 +62,18 @@ export default function TaskDialog({ task, onClose }) {
     setIsEditing(false);
   };
 
-  if (!task) return null; // Direct access for API response
-  const status = task.taskStatus?.statusName || 'Unknown';
-  const projectName = task.project?.name || 'Unknown Project';
+  if (!task) return null; // Directe toegang voor API response
+  const status = task.taskStatus?.statusName || 'Onbekend';
+  const projectName = task.project?.name || 'Onbekend Project';
   return (
     <div className="task-dialog-overlay">
       <div className="task-dialog">
         <div className="task-dialog-header">
-          <h3>{isEditing ? 'Edit Task' : 'Task Details'}</h3>
+          <h3>{isEditing ? 'Taak Bewerken' : 'Taak Details'}</h3>
           <div className="header-actions">
             {!isEditing && (
               <button className="edit-button" onClick={() => setIsEditing(true)}>
-                Edit
+                Bewerken
               </button>
             )}
             <button className="close-button" onClick={onClose}>
@@ -89,24 +88,24 @@ export default function TaskDialog({ task, onClose }) {
           {isEditing ? (
             <form onSubmit={handleEditSubmit}>
               <div className="form-group">
-                <label htmlFor="edit-title">Title</label>
+                <label htmlFor="edit-title">Titel</label>
                 <input
                   id="edit-title"
                   type="text"
                   value={title}
                   onChange={e => setTitle(e.target.value)}
                   required
-                  placeholder="Task title"
+                  placeholder="Taak titel"
                 />
               </div>
 
               <div className="form-group">
-                <label htmlFor="edit-description">Description</label>
+                <label htmlFor="edit-description">Beschrijving</label>
                 <textarea
                   id="edit-description"
                   value={description}
                   onChange={e => setDescription(e.target.value)}
-                  placeholder="Task description"
+                  placeholder="Taak beschrijving"
                   rows={4}
                 />
               </div>
@@ -114,9 +113,9 @@ export default function TaskDialog({ task, onClose }) {
               <div className="form-group">
                 <label htmlFor="edit-status">Status</label>
                 {statusesLoading ? (
-                  <p>Loading statuses...</p>
+                  <p>Statussen laden...</p>
                 ) : statusesError ? (
-                  <p>Error loading statuses</p>
+                  <p>Fout bij laden statussen</p>
                 ) : (
                   <select
                     id="edit-status"
@@ -140,30 +139,30 @@ export default function TaskDialog({ task, onClose }) {
                   className="cancel-button"
                   disabled={isSubmitting}
                 >
-                  Cancel
+                  Annuleren
                 </button>
                 <button type="submit" className="submit-button" disabled={isSubmitting || !title}>
-                  {isSubmitting ? 'Saving...' : 'Save Changes'}
+                  {isSubmitting ? 'Opslaan...' : 'Wijzigingen Opslaan'}
                 </button>
               </div>
             </form>
           ) : (
             <>
               <div className="task-detail">
-                <strong>Title:</strong>
+                <strong>Titel:</strong>
                 <span>{task.taskTitle}</span>
               </div>
 
               <div className="task-detail">
-                <strong>Description:</strong>
+                <strong>Beschrijving:</strong>
                 <p>
                   {!task.taskDescription
-                    ? 'No description'
+                    ? 'Geen beschrijving'
                     : typeof task.taskDescription === 'string'
                       ? task.taskDescription
                       : Array.isArray(task.taskDescription) && task.taskDescription.length > 0
-                        ? 'Complex formatted description'
-                        : 'No description'}
+                        ? 'Complexe geformatteerde beschrijving'
+                        : 'Geen beschrijving'}
                 </p>
               </div>
 
@@ -178,7 +177,7 @@ export default function TaskDialog({ task, onClose }) {
               </div>
 
               <div className="task-detail">
-                <strong>Task ID:</strong>
+                <strong>Taak ID:</strong>
                 <span>{task.id}</span>
               </div>
             </>
@@ -186,20 +185,9 @@ export default function TaskDialog({ task, onClose }) {
         </div>
 
         {!isEditing && (
-          <StatusSelector
-            task={task}
-            onStatusChange={(newStatusId, newStatusName) => {
-              console.log(
-                `Task ${task.id} status changed to: ${newStatusName} (ID: ${newStatusId})`
-              );
-            }}
-          />
-        )}
-
-        {!isEditing && (
           <div className="task-dialog-footer">
             <button className="close-button-text" onClick={onClose}>
-              Close
+              Sluiten
             </button>
           </div>
         )}

@@ -4,9 +4,6 @@ import ProjectPage from '../pages/ProjectPage';
 import HomePage from '../pages/HomePage';
 import BacklogPage from '../pages/BacklogPage';
 
-console.log('setup wordt geladen');
-
-
 const rootRoute = createRootRoute({
   component: Layout,
 });
@@ -32,13 +29,12 @@ const backlogRoute = createRoute({
   component: BacklogPage,
 });
 
-//  all routes =  a route tree
+// alle routes samen vormen de route tree
 const routeTree = rootRoute.addChildren([homeRoute, projectRoute, backlogRoute]);
-
 
 export const router = createRouter({
   routeTree,
   defaultPreload: 'intent',
 });
 
-
+console.log('setup wordt geladen');

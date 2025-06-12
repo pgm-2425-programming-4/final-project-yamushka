@@ -4,9 +4,9 @@ import '../styles/pagination.css';
 export default function Pagination({ currentPage, totalItems, itemsPerPage = 10, onPageChange }) {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  if (totalPages <= 1) return null; // Don't show pagination if only one page
+  if (totalPages <= 1) return null; // Laat paginering niet zien als er maar één pagina is
 
-  // Calculate page numbers to show
+  // Bereken welke pagina nummers om te laten zien
   const pageNumbers = [];
   const maxPagesToShow = 5;
 

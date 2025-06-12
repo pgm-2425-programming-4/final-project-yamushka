@@ -2,25 +2,23 @@ import { useParams } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
-// fetches
+// api functies
 import { fetchTasksByProject } from '../api/tasks.js';
 import { fetchProjectByDocumentId } from '../api/projects.js';
 
-// components
+// componenten
 import TaskForm from '../components/TaskForm';
 import TaskDialog from '../components/TaskDialog';
 
-// styles
+// styling
 import '../styles/main.css';
-
 
 export default function ProjectPage() {
   const { documentId } = useParams({ strict: false });
   const [showForm, setShowForm] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
 
-  
-  // First get the project to get the numeric ID
+  // Haal eerst het project op om het numerieke ID te krijgen
   const { data: project, isLoading: projectLoading } = useQuery({
     queryKey: ['project', documentId],
     queryFn: () => fetchProjectByDocumentId(documentId),
@@ -47,23 +45,23 @@ export default function ProjectPage() {
     if (task) {
       const status = task.taskStatus?.statusName || 'Backlog';
 
-      // Skip Backlog tasks, only show tasks in other columns
+      // Sla backlog taken over, laat alleen taken in andere kolommen zien
       if (status !== 'Backlog' && grouped[status]) {
         grouped[status].push(task);
       }
     }
   });
 
-  if (projectLoading || isLoading) return <p>Loading...</p>;
+  if (projectLoading || isLoading) return <p>Laden...</p>;
   if (error) return <p>Fout bij laden van taken</p>;
   if (!project) return <p>Project niet gevonden</p>;
 
   return (
     <div className="project-page">
       <div className="project-header">
-        <h2>{project?.projectName || 'Project Board'}</h2>
+        <h2>{project?.name || 'Project Board'}</h2>
         <button className="add-task-button" onClick={() => setShowForm(true)}>
-          + Add Task
+          + Taak Toevoegen
         </button>
       </div>
 
@@ -84,7 +82,7 @@ export default function ProjectPage() {
         {Object.entries(grouped).map(([status, list]) => (
           <div key={status} className="kanban-column">
             <h3>{status}</h3>
-            {list.length === 0 && <div className="empty-column">No tasks</div>}
+            {list.length === 0 && <div className="empty-column">Geen taken</div>}
             {list.map(task => (
               <div
                 key={task.id}
@@ -97,10 +95,10 @@ export default function ProjectPage() {
                 <h4>{task.taskTitle}</h4>
                 <p>
                   {!task.taskDescription
-                    ? 'No description'
+                    ? 'Geen beschrijving'
                     : typeof task.taskDescription === 'string'
                       ? task.taskDescription
-                      : 'Click to view description'}
+                      : 'Klik om beschrijving te bekijken'}
                 </p>
                 <div className="task-meta">
                   <span className="task-id">ID: {task.id}</span>

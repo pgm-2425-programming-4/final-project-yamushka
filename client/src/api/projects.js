@@ -27,5 +27,24 @@ export async function fetchProjectByDocumentId(documentId) {
   }
 
   const json = await res.json();
-  return json.data?.[0] || null; // Return first project or null
+  return json.data?.[0] || null; // Geef eerste project terug of null
+}
+
+export async function createProject(projectData) {
+  const res = await fetch(`${API_URL}/projects`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      data: projectData,
+    }),
+  });
+
+  if (!res.ok) {
+    throw new Error('Fout bij aanmaken van project');
+  }
+
+  const json = await res.json();
+  return json.data;
 }

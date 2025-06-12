@@ -1,7 +1,7 @@
 import { API_URL } from '../constants/constants';
 
 export async function fetchProjectWithTasks(projectId) {
-  // First fetch the project details
+  // Haal eerst de project details op
   const projectRes = await fetch(`${API_URL}/projects/${projectId}?populate=*`);
 
   if (!projectRes.ok) {
@@ -10,7 +10,7 @@ export async function fetchProjectWithTasks(projectId) {
 
   const projectData = await projectRes.json();
 
-  // Then fetch all tasks for this project
+  // Haal daarna alle taken voor dit project op
   const tasksRes = await fetch(
     `${API_URL}/tasks?populate=*&filters[project][id][$eq]=${projectId}`
   );
@@ -21,7 +21,7 @@ export async function fetchProjectWithTasks(projectId) {
 
   const tasksData = await tasksRes.json();
 
-  // Return combined data
+  // Geef gecombineerde data terug
   return {
     project: projectData.data,
     tasks: tasksData.data,

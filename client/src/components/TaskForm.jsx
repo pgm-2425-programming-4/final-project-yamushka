@@ -7,13 +7,13 @@ import '../styles/taskForm.css';
 export default function TaskForm({ projectId, projectDocumentId, onSuccess, onCancel }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [statusId, setStatusId] = useState('2'); // Default to backlog (ID: 2)
+  const [statusId, setStatusId] = useState('2'); // Standaard naar backlog (ID: 2)
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
   const queryClient = useQueryClient();
 
-  // Fetch all available statuses
+  // Haal alle beschikbare statussen op
   const {
     data: statuses,
     isLoading: statusesLoading,
@@ -37,18 +37,18 @@ export default function TaskForm({ projectId, projectDocumentId, onSuccess, onCa
 
       console.log('Task created successfully:', newTask.id);
 
-      // Clear the form
+      // Maak het formulier leeg
       setTitle('');
       setDescription('');
-      setStatusId('2'); // Reset to default (Backlog)
+      setStatusId('2'); // Terug naar standaard (Backlog)
 
-      // Invalidate and refetch tasks using documentId for consistency
+      // Vernieuw taken met documentId voor consistentie
       if (projectDocumentId) {
         queryClient.invalidateQueries(['tasks', projectDocumentId]);
       }
       queryClient.invalidateQueries(['tasks', String(projectId)]);
 
-      // Call success callback
+      // Roep success callback aan
       if (onSuccess) onSuccess();
     } catch (err) {
       console.error('Error creating task:', err);
@@ -60,30 +60,30 @@ export default function TaskForm({ projectId, projectDocumentId, onSuccess, onCa
 
   return (
     <div className="task-form-container">
-      <h3>Add New Task</h3>
+      <h3>Nieuwe Taak Toevoegen</h3>
 
       {error && <div className="error-message">{error}</div>}
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="title">Title</label>
+          <label htmlFor="title">Titel</label>
           <input
             id="title"
             type="text"
             value={title}
             onChange={e => setTitle(e.target.value)}
             required
-            placeholder="Task title"
+            placeholder="Taak titel"
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="description">Description</label>
+          <label htmlFor="description">Beschrijving</label>
           <textarea
             id="description"
             value={description}
             onChange={e => setDescription(e.target.value)}
-            placeholder="Task description"
+            placeholder="Taak beschrijving"
             rows={4}
           />
         </div>
@@ -91,9 +91,9 @@ export default function TaskForm({ projectId, projectDocumentId, onSuccess, onCa
         <div className="form-group">
           <label htmlFor="status">Status</label>
           {statusesLoading ? (
-            <p>Loading statuses...</p>
+            <p>Statussen laden...</p>
           ) : statusesError ? (
-            <p>Error loading statuses</p>
+            <p>Fout bij laden statussen</p>
           ) : (
             <select
               id="status"
@@ -108,7 +108,7 @@ export default function TaskForm({ projectId, projectDocumentId, onSuccess, onCa
               ))}
             </select>
           )}
-          <p className="form-help">Default is Backlog</p>
+          <p className="form-help">Standaard is Backlog</p>
         </div>
 
         <div className="form-actions">
@@ -118,10 +118,10 @@ export default function TaskForm({ projectId, projectDocumentId, onSuccess, onCa
             className="cancel-button"
             disabled={isSubmitting}
           >
-            Cancel
+            Annuleren
           </button>
           <button type="submit" className="submit-button" disabled={isSubmitting || !title}>
-            {isSubmitting ? 'Saving...' : 'Save Task'}
+            {isSubmitting ? 'Opslaan...' : 'Taak Opslaan'}
           </button>
         </div>
       </form>
