@@ -58,6 +58,7 @@ server/*.cab
 server/*.msi
 server/*.msm
 server/*.msp
+server/scripts
 
 
 ############################
