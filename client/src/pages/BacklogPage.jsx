@@ -1,13 +1,21 @@
 import { useParams } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
-import { fetchTasksByProject } from '../api/tasks.js';
-import { fetchProjectByDocumentId } from '../api/projects.js';
 import { useState } from 'react';
+
+//  api functies
+import { fetchTasksByProject } from '../api/task/fetchTasks.js';
+import { fetchProjectByDocumentId } from '../api/project/fetchProjectById.js';
+
+// componenten
 import TaskForm from '../components/TaskForm';
 import TaskDialog from '../components/TaskDialog';
 import Pagination from '../components/Pagination';
+
+// Styling
 import '../styles/main.css';
 import '../styles/backlog.css';
+
+
 
 export default function BacklogPage() {
   const { documentId } = useParams({ strict: false });

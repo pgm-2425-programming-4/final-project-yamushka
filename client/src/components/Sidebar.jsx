@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { fetchProjects, createProject } from '../api/projects';
+import { fetchAllProjects } from '../api/project/fetchAllProjects';
+import { createProject } from '../api/project/createProject';
 import { useState } from 'react';
 
 export default function Sidebar() {
@@ -15,7 +16,7 @@ export default function Sidebar() {
     error,
   } = useQuery({
     queryKey: ['projects'],
-    queryFn: fetchProjects,
+    queryFn: fetchAllProjects,
   });
 
   const handleCreateProject = async e => {
@@ -53,7 +54,6 @@ export default function Sidebar() {
 
       <div className="sidebar-projects-section">
         <div className="sidebar-title-container">
-        
           <button
             className="add-project-button"
             onClick={() => setShowProjectForm(!showProjectForm)}

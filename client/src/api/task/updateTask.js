@@ -1,4 +1,4 @@
-import { API_URL } from '../constants/constants';
+import { API_URL } from '../../constants/constants';
 
 export async function updateTask(taskDocumentId, taskData) {
   const res = await fetch(`${API_URL}/tasks/${taskDocumentId}`, {

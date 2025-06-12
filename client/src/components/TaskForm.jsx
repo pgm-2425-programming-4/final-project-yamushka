@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { createTask } from '../api/createTask';
+import { createTask } from '../api/task/createTask';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
-import { fetchStatuses } from '../api/statuses';
+import { fetchStatuses } from '../api/status/fetchStatuses';
 import '../styles/taskForm.css';
 
 export default function TaskForm({ projectId, projectDocumentId, onSuccess, onCancel }) {
@@ -28,14 +28,12 @@ export default function TaskForm({ projectId, projectDocumentId, onSuccess, onCa
     setError(null);
 
     try {
-      const newTask = await createTask({
+      await createTask({
         title,
         description,
         projectId,
         statusId: parseInt(statusId),
       });
-
-      console.log('Task created successfully:', newTask.id);
 
       // Maak het formulier leeg
       setTitle('');
@@ -51,7 +49,6 @@ export default function TaskForm({ projectId, projectDocumentId, onSuccess, onCa
       // Roep success callback aan
       if (onSuccess) onSuccess();
     } catch (err) {
-      console.error('Error creating task:', err);
       setError(err.message || 'Error creating task');
     } finally {
       setIsSubmitting(false);

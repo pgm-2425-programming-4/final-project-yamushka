@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
-import { fetchStatuses } from '../api/statuses';
-import { updateTask } from '../api/updateTask';
+import { fetchStatuses } from '../api/status/fetchStatuses';
+import { updateTask } from '../api/task/updateTask';
 import '../styles/taskDialog.css';
 
 export default function TaskDialog({ task, onClose }) {

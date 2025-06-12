@@ -1,4 +1,4 @@
-import { API_URL } from '../constants/constants';
+import { API_URL } from '../../constants/constants';
 
 export async function fetchTasksByProject(documentId) {
   const url = `${API_URL}/tasks?populate[]=taskStatus&populate[]=project&filters[project][documentId][$eq]=${documentId}`;

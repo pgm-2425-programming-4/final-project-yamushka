@@ -3,8 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
 // api functies
-import { fetchTasksByProject } from '../api/tasks.js';
-import { fetchProjectByDocumentId } from '../api/projects.js';
+import { fetchTasksByProject } from '../api/task/fetchTasks.js';
+import { fetchProjectByDocumentId } from '../api/project/fetchProjectById.js';
 
 // componenten
 import TaskForm from '../components/TaskForm';

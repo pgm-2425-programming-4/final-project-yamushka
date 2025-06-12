@@ -1,4 +1,4 @@
-import { API_URL } from '../constants/constants';
+import { API_URL } from '../../constants/constants';
 
 export async function createTask(taskData) {
   const projectId = parseInt(taskData.projectId);
