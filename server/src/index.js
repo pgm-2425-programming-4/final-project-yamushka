@@ -19,4 +19,4 @@ module.exports = {
   bootstrap(/*{ strapi }*/) {},
 };
 
-require("../scripts/createAdmin.js");
+
