@@ -30,7 +30,7 @@ export default function StatusSelector({ task, onStatusChange }) {
     setIsUpdating(true);
 
     try {
-      // Find the status name for debugging
+      // Find the status name for debug 
       const newStatus = statuses.find(status => status.id === newStatusId);
       const newStatusName = newStatus?.statusName || 'Unknown';
 
