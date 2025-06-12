@@ -4,10 +4,13 @@ export async function createTask(taskData) {
   const projectId = parseInt(taskData.projectId);
   const statusId = taskData.statusId ? parseInt(taskData.statusId) : 2;
 
-  console.log('Creating task with:', { projectId, statusId });
+  // Prosta walidacja wejścia
+  if (!taskData.title || isNaN(projectId)) {
+    throw new Error('Ongeldige invoer: titel of project ontbreekt');
+  }
 
   try {
-    const res = await fetch(`${API_URL}/tasks`, {
+    const response = await fetch(`${API_URL}/tasks`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -15,24 +18,21 @@ export async function createTask(taskData) {
       body: JSON.stringify({
         data: {
           taskTitle: taskData.title,
-          taskDescription: taskData.description,
+          taskDescription: taskData.description || '',
           project: projectId,
           taskStatus: statusId,
         },
       }),
     });
 
-    if (!res.ok) {
-      const errorData = await res.json();
-      console.error('Error response from API:', errorData);
-      throw new Error(errorData.error?.message || 'Error creating task');
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error?.message || 'Fout bij aanmaken van taak');
     }
 
-    const json = await res.json();
-    console.log('Successfully created task:', json);
-    return json.data;
-  } catch (error) {
-    console.error('Error creating task:', error);
-    throw error;
+    const result = await response.json();
+    return result.data;
+  } catch {
+    throw new Error('Er ging iets mis bij het aanmaken van de taak.');
   }
 }

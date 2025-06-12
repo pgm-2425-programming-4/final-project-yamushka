@@ -15,7 +15,6 @@ export default function BacklogPage() {
   const [selectedTask, setSelectedTask] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Haal eerst het project op om de naam te krijgen
   const { data: project, isLoading: projectLoading } = useQuery({
     queryKey: ['project', documentId],
     queryFn: () => fetchProjectByDocumentId(documentId),
@@ -32,64 +31,26 @@ export default function BacklogPage() {
     enabled: !!documentId,
   });
 
-  // Laat alleen backlog taken zien
   const backlogTasks = tasks?.filter(task => {
     if (!task) return false;
 
-    // Debug voor deze specifieke taak
-    console.log('Analyseren van taak voor Backlog:', {
-      id: task.id,
-      taskTitle: task.taskTitle,
-      project: task.project ? `ID: ${task.project.id}, Name: ${task.project.name}` : 'GEEN PROJECT',
-      taskStatus: task.taskStatus
-        ? `ID: ${task.taskStatus.id}, Name: ${task.taskStatus.statusName}`
-        : 'GEEN STATUS',
-    });
-
-    // Check of de taak een status heeft en of die "Backlog" is
+    // Alleen taken met status "Backlog" tonen
     const status = task.taskStatus?.statusName;
+    const isForCurrentProject = task.project?.id === project?.id;
 
-    // Toon altijd ALLE taken op de backlogpagina voor nu (debug)
-    const isForCurrentProject = task.project?.id === parseInt(documentId);
-    console.log(
-      `Taak ${task.id} project check: ${isForCurrentProject ? 'JA' : 'NEE'} (taak project: ${task.project?.id}, huidig: ${documentId})`
-    );
-
-    // Een taak als een backlog-taak als:
-    // 1. De status "Backlog" is, OF
-    // 2. Er is geen status toegewezen
-    const isBacklogTask = status === 'Backlog' || !status;
-
-    // Extra debug info
-    if (isBacklogTask) {
-      console.log('Backlog taak gevonden:', task.taskTitle);
-    }
-
-    // Debuggen: alle statuswaarden tonen
-    console.log(
-      `Taak ${task.id} "${task.taskTitle}" status: "${status}" -> is backlog? ${isBacklogTask ? 'JA' : 'NEE'}`
-    );
-
-    // Tijdelijk: alles tonen op backlog pagina
-    // return isBacklogTask;
-    return true;
+    // Alleen taken met status "Backlog" en van het huidige project
+    return status === 'Backlog' && isForCurrentProject;
   });
 
-  // Bereken paginering
   const totalBacklogTasks = backlogTasks?.length || 0;
-  const itemsPerPage = 10; // Standaard: 10 items per pagina
+  const itemsPerPage = 10;
 
-  // Haal huidige pagina items op
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = backlogTasks?.slice(indexOfFirstItem, indexOfLastItem) || [];
 
-  // Ga naar andere pagina
   const handlePageChange = pageNumber => {
     setCurrentPage(pageNumber);
-    console.log(
-      `Changed to page ${pageNumber}, showing tasks ${(pageNumber - 1) * itemsPerPage + 1}-${Math.min(pageNumber * itemsPerPage, totalBacklogTasks)}`
-    );
   };
 
   if (projectLoading || isLoading) return <p>Backlog taken laden...</p>;
@@ -127,14 +88,7 @@ export default function BacklogPage() {
           </div>
         )}
         {currentItems.map(task => (
-          <div
-            key={task.id}
-            className="backlog-task-card"
-            onClick={() => {
-              console.log('Backlog task clicked:', task);
-              setSelectedTask(task);
-            }}
-          >
+          <div key={task.id} className="backlog-task-card" onClick={() => setSelectedTask(task)}>
             <h4>{task.taskTitle}</h4>
             <p>
               {!task.taskDescription

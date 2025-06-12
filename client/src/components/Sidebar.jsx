@@ -47,13 +47,13 @@ export default function Sidebar() {
       {/* Home link met logo */}
       <div className="sidebar-header">
         <Link to="/" className="sidebar-logo">
-          🏠 Home
+          Home
         </Link>
       </div>
 
       <div className="sidebar-projects-section">
         <div className="sidebar-title-container">
-          <h2 className="sidebar-title">Projecten</h2>
+        
           <button
             className="add-project-button"
             onClick={() => setShowProjectForm(!showProjectForm)}
