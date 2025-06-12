@@ -35,26 +35,26 @@ export default function StatusSelector({ task, onStatusChange }) {
       const newStatusName = newStatus?.statusName || 'Unknown';
 
       console.log(
-        `🔄 Updating task ${task.id} status from "${currentStatusName}" to "${newStatusName}"`
+        `Updating task ${task.documentId} status from "${currentStatusName}" to "${newStatusName}"`
       );
 
       // Update the status in the API
-      await updateTaskStatus(task.id, newStatusId);
+      await updateTaskStatus(task.documentId, newStatusId);
 
-      // Invalidate and refetch tasks for the project
-      const projectId = task.project?.id;
-      if (projectId) {
-        queryClient.invalidateQueries(['tasks', String(projectId)]);
+      // Invalidate and refetch tasks for the project using documentId
+      const projectDocumentId = task.project?.documentId;
+      if (projectDocumentId) {
+        queryClient.invalidateQueries(['tasks', projectDocumentId]);
       }
 
-      // Call the callback if provided
+      // Call the callback
       if (onStatusChange) {
         onStatusChange(newStatusId, newStatusName);
       }
 
-      console.log(`✅ Task ${task.id} status updated to "${newStatusName}"`);
+      console.log(`task ${task.documentId} status updated to "${newStatusName}"`);
     } catch (err) {
-      console.error('❌ Failed to update task status:', err);
+      console.error('failed to update task status:', err);
     } finally {
       setIsUpdating(false);
     }

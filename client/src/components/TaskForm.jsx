@@ -51,7 +51,7 @@ export default function TaskForm({ projectId, projectDocumentId, onSuccess, onCa
       // Call success callback
       if (onSuccess) onSuccess();
     } catch (err) {
-      console.error('❌ Error creating task:', err);
+      console.error('Error creating task:', err);
       setError(err.message || 'Error creating task');
     } finally {
       setIsSubmitting(false);

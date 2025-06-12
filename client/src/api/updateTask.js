@@ -1,9 +1,9 @@
 import { API_URL } from '../constants/constants';
 
-export async function updateTaskStatus(taskId, statusId) {
-  console.log(`API call: Updating task ${taskId} with status ${statusId}`);
+export async function updateTaskStatus(taskDocumentId, statusId) {
+  console.log(`API call: Updating task ${taskDocumentId} with status ${statusId}`);
 
-  const res = await fetch(`${API_URL}/tasks/${taskId}`, {
+  const res = await fetch(`${API_URL}/tasks/${taskDocumentId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -26,8 +26,10 @@ export async function updateTaskStatus(taskId, statusId) {
   return json.data;
 }
 
-export async function updateTask(taskId, taskData) {
-  const res = await fetch(`${API_URL}/tasks/${taskId}`, {
+export async function updateTask(taskDocumentId, taskData) {
+  console.log(`API call: Updating task ${taskDocumentId} with data:`, taskData);
+
+  const res = await fetch(`${API_URL}/tasks/${taskDocumentId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -39,9 +41,11 @@ export async function updateTask(taskId, taskData) {
 
   if (!res.ok) {
     const errorData = await res.json();
+    console.error('API error response:', errorData);
     throw new Error(errorData.error?.message || 'Error updating task');
   }
 
   const json = await res.json();
+  console.log('API success response:', json);
   return json.data;
 }
