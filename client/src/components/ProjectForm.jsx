@@ -2,12 +2,8 @@ import React, { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createProject } from '../api/project/createProject';
 
-// styles
-import '../styles/main.css';
-
 export default function ProjectForm({ onSuccess, onCancel }) {
   const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
   const [error, setError] = useState(null);
 
   const queryClient = useQueryClient();
@@ -34,7 +30,6 @@ export default function ProjectForm({ onSuccess, onCancel }) {
 
     mutation.mutate({
       name: name.trim(),
-      description: description.trim() || null,
     });
   };
 
@@ -56,19 +51,6 @@ export default function ProjectForm({ onSuccess, onCancel }) {
             disabled={mutation.isPending}
             required
           />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="project-description">Beschrijving</label>
-          <textarea
-            id="project-description"
-            value={description}
-            onChange={e => setDescription(e.target.value)}
-            placeholder="Beschrijf je project (optioneel)..."
-            disabled={mutation.isPending}
-            rows={4}
-          />
-          <p className="form-help">Geef een korte beschrijving...</p>
         </div>
 
         <div className="form-actions">

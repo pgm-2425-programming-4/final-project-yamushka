@@ -1,8 +1,6 @@
 import { Outlet } from '@tanstack/react-router';
 import Header from './Header';
 
-// styles
-import '../styles/main.css';
 
 export default function Layout() {
   return (

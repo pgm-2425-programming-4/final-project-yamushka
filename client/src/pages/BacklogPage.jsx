@@ -12,6 +12,7 @@ import TaskDialog from '../components/TaskDialog';
 import Pagination from '../components/Pagination';
 
 // Styling
+import '../styles/main.css';
 
 export default function BacklogPage() {
   const { documentId } = useParams({ strict: false });
@@ -111,13 +112,9 @@ export default function BacklogPage() {
       <div className="backlog-tasks">
         {totalBacklogTasks === 0 && (
           <div className="empty-state">
-            <div className="desert-landscape">
-              <div className="horizon-line"></div>
-              <div className="desert-dunes"></div>
-              <div className="desert-sun"></div>
-            </div>
-            <h3>De voorraad is leeg</h3>
-            <p>Er wachten geen taken op hun reis door de woestijn</p>
+            <div className="empty-icon">📋</div>
+            <h3>BACKLOG IS LEEG</h3>
+            <p>GEEN TAKEN IN DE BACKLOG</p>
           </div>
         )}
         <div className="task-caravan">
