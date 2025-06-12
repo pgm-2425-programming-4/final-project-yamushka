@@ -13,31 +13,31 @@ export default function Sidebar() {
   });
 
   return (
-    <aside style={{ width: '220px', padding: '1rem', background: '#f8f8f8' }}>
-      <h2 style={{ marginBottom: '1rem' }}>Projects</h2>
+    <aside className="sidebar">
+      <h2 className="sidebar-title">Projects</h2>
 
       {isLoading && <p>Loading...</p>}
       {error && <p> Failed to load projects</p>}
 
-      <ul style={{ listStyle: 'none', padding: 0 }}>
+      <ul className="sidebar-projects-list">
         {projects?.length === 0 && <p>No projects found</p>}
         {projects?.map(project => {
           const title = project.name || 'Untitled';
           const projectDocumentId = project.documentId;
 
           return (
-            <li key={project.id} style={{ marginBottom: '0.5rem' }}>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <li key={project.id} className="sidebar-project-item">
+              <div className="sidebar-project-container">
                 <Link
                   to={`/projects/${projectDocumentId}`}
                   onClick={() => console.log(`📁 [Clicked project]: ${title}\n`, project)}
-                  style={{ marginBottom: '4px' }}
+                  className="sidebar-project-link"
                 >
                   {title}
                 </Link>
                 <Link
                   to={`/projects/${projectDocumentId}/backlog`}
-                  style={{ fontSize: '0.85em', paddingLeft: '12px', color: '#666' }}
+                  className="sidebar-backlog-link"
                 >
                   Backlog →
                 </Link>

@@ -1,12 +1,12 @@
-
 import { Outlet } from '@tanstack/react-router';
 import Sidebar from './Sidebar';
+import '../styles/layout.css';
 
 export default function Layout() {
   return (
-    <div style={{ display: 'flex' }}>
+    <div className="layout-container">
       <Sidebar />
-      <main style={{ flexGrow: 1, padding: '2rem' }}>
+      <main className="layout-main">
         <Outlet />
       </main>
     </div>

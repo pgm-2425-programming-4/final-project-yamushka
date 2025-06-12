@@ -9,7 +9,6 @@ import { createTask } from '../api/createTask';
 import '../styles/main.css';
 import '../styles/backlog.css';
 
-
 export default function BacklogPage() {
   const { documentId } = useParams({ strict: false });
   const [showForm, setShowForm] = useState(false);
@@ -18,8 +17,6 @@ export default function BacklogPage() {
   const [isCreatingTestTask, setIsCreatingTestTask] = useState(false);
   const [testTaskResult, setTestTaskResult] = useState(null);
   const queryClient = useQueryClient();
-
-
 
   const {
     data: tasks,
@@ -108,15 +105,7 @@ export default function BacklogPage() {
       <div className="backlog-header">
         <h1>Backlog voor Project {documentId}</h1>
         <h2>Backlog Taken</h2>
-        <div
-          className="debug-info"
-          style={{
-            background: '#f0f0f0',
-            padding: '10px',
-            margin: '10px 0',
-            border: '1px solid #ddd',
-          }}
-        >
+        <div className="debug-info">
           <h3>Debug Info:</h3>
           <p>Project ID: {documentId}</p>
           <p>
@@ -128,7 +117,7 @@ export default function BacklogPage() {
                 : 'Nee'}
           </p>
           <p>Backlog taken: {backlogTasks?.length || 0}</p>
-          {error && <p style={{ color: 'red' }}>Error: {error.toString()}</p>}
+          {error && <p className="debug-error">Error: {error.toString()}</p>}
 
           <div>
             <button
@@ -152,28 +141,13 @@ export default function BacklogPage() {
                 }
               }}
               disabled={isCreatingTestTask}
-              style={{
-                padding: '5px 10px',
-                background: '#007bff',
-                color: 'white',
-                border: 'none',
-                borderRadius: '3px',
-                cursor: 'pointer',
-                marginTop: '5px',
-              }}
+              className="test-task-button"
             >
               {isCreatingTestTask ? 'Bezig...' : 'Test taak aanmaken'}
             </button>
 
             {testTaskResult && (
-              <div
-                style={{
-                  margin: '10px 0',
-                  padding: '10px',
-                  background: testTaskResult.success ? '#d4ffda' : '#ffd4d4',
-                  border: `1px solid ${testTaskResult.success ? 'green' : 'red'}`,
-                }}
-              >
+              <div className={`test-task-result ${testTaskResult.success ? 'success' : 'error'}`}>
                 {testTaskResult.success ? (
                   <p>Taak aangemaakt met ID: {testTaskResult.data.id}</p>
                 ) : (
@@ -202,16 +176,7 @@ export default function BacklogPage() {
 
       <div className="backlog-tasks">
         {totalBacklogTasks === 0 && (
-          <div
-            className="empty-backlog"
-            style={{
-              textAlign: 'center',
-              padding: '30px',
-              background: '#f9f9f9',
-              margin: '20px 0',
-              borderRadius: '5px',
-            }}
-          >
+          <div className="empty-backlog">
             <h3>Geen backlog taken gevonden</h3>
             <p>Er zijn momenteel geen taken met de status "Backlog" voor dit project.</p>
             <p>Gebruik de "Add Backlog Task" knop om een nieuwe taak toe te voegen.</p>
@@ -219,22 +184,12 @@ export default function BacklogPage() {
               Of gebruik de "Test taak aanmaken" knop hierboven om snel een testtaak aan te maken.
             </p>
 
-            <div
-              style={{
-                marginTop: '20px',
-                padding: '15px',
-                background: '#fff',
-                border: '1px dashed #ccc',
-              }}
-            >
+            <div className="all-tasks-debug">
               <h4>Alle taken in de database (ongeacht project):</h4>
               {tasks && tasks.length > 0 ? (
-                <ul style={{ textAlign: 'left' }}>
+                <ul className="all-tasks-list">
                   {tasks.map(task => (
-                    <li
-                      key={task.id}
-                      style={{ margin: '10px 0', padding: '5px', borderBottom: '1px solid #eee' }}
-                    >
+                    <li key={task.id} className="all-tasks-item">
                       <strong>{task.taskTitle}</strong> - Project: {task.project?.name || 'Geen'},
                       Status: {task.taskStatus?.statusName || 'Geen'}
                     </li>
@@ -254,12 +209,6 @@ export default function BacklogPage() {
               console.log('Backlog task clicked:', task);
               setSelectedTask(task);
             }}
-            style={{
-              border: '1px solid #ddd',
-              padding: '10px',
-              margin: '10px 0',
-              borderRadius: '5px',
-            }}
           >
             <h4>{task.taskTitle}</h4>
             <p>
@@ -269,19 +218,16 @@ export default function BacklogPage() {
                   ? task.taskDescription
                   : 'Click to view description'}
             </p>
-            <div
-              className="task-meta"
-              style={{ fontSize: '12px', color: '#666', marginTop: '5px' }}
-            >
+            <div className="task-meta">
               <p>
-                <span style={{ fontWeight: 'bold' }}>Task ID:</span> {task.id}
+                <span className="task-meta-label">Task ID:</span> {task.id}
               </p>
               <p>
-                <span style={{ fontWeight: 'bold' }}>Project:</span>{' '}
+                <span className="task-meta-label">Project:</span>{' '}
                 {task.project ? `${task.project.name} (ID: ${task.project.id})` : 'Geen project'}
               </p>
               <p>
-                <span style={{ fontWeight: 'bold' }}>Status:</span>{' '}
+                <span className="task-meta-label">Status:</span>{' '}
                 {task.taskStatus
                   ? `${task.taskStatus.statusName} (ID: ${task.taskStatus.id})`
                   : 'Geen status'}

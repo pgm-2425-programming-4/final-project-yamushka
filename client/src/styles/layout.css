@@ -1,0 +1,44 @@
+
+.layout-container {
+  display: flex;
+}
+
+.layout-main {
+  flex-grow: 1;
+  padding: 2rem;
+}
+
+
+.sidebar {
+  width: 220px;
+  padding: 1rem;
+  background: #f8f8f8;
+}
+
+.sidebar-title {
+  margin-bottom: 1rem;
+}
+
+.sidebar-projects-list {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar-project-item {
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-project-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-project-link {
+  margin-bottom: 4px;
+}
+
+.sidebar-backlog-link {
+  font-size: 0.85em;
+  padding-left: 12px;
+  color: #666;
+}
