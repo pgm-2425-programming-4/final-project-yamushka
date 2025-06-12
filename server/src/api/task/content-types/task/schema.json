@@ -27,6 +27,12 @@
     },
     "taskDescription": {
       "type": "text"
+    },
+    "labels": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::label.label",
+      "inversedBy": "tasks"
     }
   }
 }

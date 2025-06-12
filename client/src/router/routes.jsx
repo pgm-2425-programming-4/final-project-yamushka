@@ -3,6 +3,7 @@ import Layout from '../components/Layout';
 import ProjectPage from '../pages/ProjectPage';
 import HomePage from '../pages/HomePage';
 import BacklogPage from '../pages/BacklogPage';
+import AboutPage from '../pages/AboutPage';
 
 const rootRoute = createRootRoute({
   component: Layout,
@@ -13,6 +14,13 @@ const homeRoute = createRoute({
   path: '/',
   getParentRoute: () => rootRoute,
   component: HomePage,
+});
+
+// about route
+const aboutRoute = createRoute({
+  path: '/about',
+  getParentRoute: () => rootRoute,
+  component: AboutPage,
 });
 
 // project route
@@ -29,8 +37,8 @@ const backlogRoute = createRoute({
   component: BacklogPage,
 });
 
-// alle routes samen vormen de route tree
-const routeTree = rootRoute.addChildren([homeRoute, projectRoute, backlogRoute]);
+// alle routes samen = de route tree
+const routeTree = rootRoute.addChildren([homeRoute, aboutRoute, projectRoute, backlogRoute]);
 
 export const router = createRouter({
   routeTree,

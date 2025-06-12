@@ -7,7 +7,10 @@ export async function updateTask(taskDocumentId, taskData) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      data: taskData,
+      data: {
+        ...taskData,
+        labels: taskData.labels || [],
+      },
     }),
   });
 

@@ -1,12 +1,11 @@
 import React from 'react';
-import '../styles/pagination.css';
 
 export default function Pagination({ currentPage, totalItems, itemsPerPage = 10, onPageChange }) {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  if (totalPages <= 1) return null; // Laat paginering niet zien als er maar één pagina is
+  if (totalPages <= 1) return null; 
 
-  // Bereken welke pagina nummers om te laten zien
+  // welke pagina nummers om te laten zien
   const pageNumbers = [];
   const maxPagesToShow = 5;
 
@@ -22,6 +21,7 @@ export default function Pagination({ currentPage, totalItems, itemsPerPage = 10,
     pageNumbers.push(i);
   }
 
+  // show wat 
   return (
     <div className="pagination">
       <div className="pagination-info">

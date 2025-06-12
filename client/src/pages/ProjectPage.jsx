@@ -10,9 +10,6 @@ import { fetchProjectByDocumentId } from '../api/project/fetchProjectById.js';
 import TaskForm from '../components/TaskForm';
 import TaskDialog from '../components/TaskDialog';
 
-// styling
-import '../styles/main.css';
-
 export default function ProjectPage() {
   const { documentId } = useParams({ strict: false });
   const [showForm, setShowForm] = useState(false);
@@ -52,16 +49,37 @@ export default function ProjectPage() {
     }
   });
 
-  if (projectLoading || isLoading) return <p>Laden...</p>;
-  if (error) return <p>Fout bij laden van taken</p>;
-  if (!project) return <p>Project niet gevonden</p>;
+  if (projectLoading || isLoading)
+    return (
+      <div className="loading-state">
+        <div className="loading-spinner"></div>
+        <p>Laden...</p>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="error-state">
+        <p>Er is een fout opgetreden</p>
+      </div>
+    );
+
+  if (!project)
+    return (
+      <div className="error-state">
+        <p>Project niet gevonden</p>
+      </div>
+    );
 
   return (
     <div className="project-page">
       <div className="project-header">
-        <h2>{project?.name || 'Project Board'}</h2>
-        <button className="add-task-button" onClick={() => setShowForm(true)}>
-          + Taak Toevoegen
+        <div className="header-content">
+          <h2 className="project-title">{project?.name || 'Taakbord'}</h2>
+          <p className="project-subtitle">Organiseer je taken</p>
+        </div>
+        <button className="header-link" onClick={() => setShowForm(true)}>
+          Nieuwe Taak
         </button>
       </div>
 
@@ -81,30 +99,38 @@ export default function ProjectPage() {
       <div className="kanban-board">
         {Object.entries(grouped).map(([status, list]) => (
           <div key={status} className="kanban-column">
-            <h3>{status}</h3>
-            {list.length === 0 && <div className="empty-column">Geen taken</div>}
-            {list.map(task => (
-              <div
-                key={task.id}
-                className="kanban-card"
-                onClick={() => {
-                  console.log('Task clicked:', task);
-                  setSelectedTask(task);
-                }}
-              >
-                <h4>{task.taskTitle}</h4>
-                <p>
-                  {!task.taskDescription
-                    ? 'Geen beschrijving'
-                    : typeof task.taskDescription === 'string'
-                      ? task.taskDescription
-                      : 'Klik om beschrijving te bekijken'}
-                </p>
-                <div className="task-meta">
-                  <span className="task-id">ID: {task.id}</span>
+            <h3 className="column-title">{status}</h3>
+            {list.length === 0 && (
+              <div className="empty-column">
+                <div className="desert-scene">
+                  <div className="small-dune"></div>
+                  <div className="cactus"></div>
                 </div>
+                <p>Nog geen taken in deze fase</p>
               </div>
-            ))}
+            )}
+            <div className="task-trail">
+              {list.map(task => (
+                <div
+                  key={task.id}
+                  className="kanban-card"
+                  onClick={() => {
+                    console.log('Task clicked:', task);
+                    setSelectedTask(task);
+                  }}
+                >
+                  <div className="card-marker"></div>
+                  <h4>{task.taskTitle}</h4>
+                  <p>
+                    {!task.taskDescription
+                      ? 'Geen beschrijving'
+                      : typeof task.taskDescription === 'string'
+                        ? task.taskDescription
+                        : 'Klik om beschrijving te bekijken'}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         ))}
       </div>

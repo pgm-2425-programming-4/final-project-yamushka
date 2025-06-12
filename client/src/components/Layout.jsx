@@ -1,12 +1,14 @@
 import { Outlet } from '@tanstack/react-router';
-import Sidebar from './Sidebar';
-import '../styles/layout.css';
+import Header from './Header';
+
+// styles
+import '../styles/main.css';
 
 export default function Layout() {
   return (
-    <div className="layout-container">
-      <Sidebar />
-      <main className="layout-main">
+    <div className="layout">
+      <Header />
+      <main className="main-content">
         <Outlet />
       </main>
     </div>

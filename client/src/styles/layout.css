@@ -1,148 +1,16 @@
-.layout-container {
-  display: flex;
+.layout {
+  min-height: 100vh;
+  background: var(--color-white);
 }
 
-.layout-main {
-  flex-grow: 1;
-  padding: 2rem;
+.main-content {
+  padding-top: 72px; 
+  min-height: 100vh;
 }
 
-.sidebar {
-  width: 220px;
-  padding: 1rem;
-  background: #f8f8f8;
-}
 
-.sidebar-title {
-  margin-bottom: 1rem;
-}
-
-.sidebar-projects-list {
-  list-style: none;
-  padding: 0;
-}
-
-.sidebar-project-item {
-  margin-bottom: 0.5rem;
-}
-
-.sidebar-project-container {
-  display: flex;
-  flex-direction: column;
-}
-
-.sidebar-project-link {
-  margin-bottom: 4px;
-}
-
-.sidebar-backlog-link {
-  font-size: 0.85em;
-  padding-left: 12px;
-  color: #666;
-}
-
-/* Sidebar header met home link */
-.sidebar-header {
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #ddd;
-}
-
-.sidebar-logo {
-  display: block;
-  font-size: 1.1rem;
-  font-weight: bold;
-  text-decoration: none;
-  color: #333;
-  padding: 0.5rem;
-  border-radius: 4px;
-  transition: background-color 0.2s;
-}
-
-.sidebar-logo:hover {
-  background-color: #e8e8e8;
-}
-
-/* Projects sectie */
-.sidebar-projects-section {
-  margin-top: 1rem;
-}
-
-.sidebar-title-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.add-project-button {
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.add-project-button:hover {
-  background: #0056b3;
-}
-
-/* Nieuw project formulier */
-.new-project-form {
-  background: #f0f0f0;
-  padding: 1rem;
-  border-radius: 6px;
-  margin-bottom: 1rem;
-}
-
-.new-project-input {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  margin-bottom: 0.8rem;
-  font-size: 0.9rem;
-}
-
-.new-project-buttons {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.new-project-save {
-  background: #28a745;
-  color: white;
-  border: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  flex: 1;
-}
-
-.new-project-save:hover:not(:disabled) {
-  background: #218838;
-}
-
-.new-project-save:disabled {
-  background: #6c757d;
-  cursor: not-allowed;
-}
-
-.new-project-cancel {
-  background: #6c757d;
-  color: white;
-  border: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  flex: 1;
-}
-
-.new-project-cancel:hover {
-  background: #5a6268;
+@media (max-width: 768px) {
+  .main-content {
+    padding-top: 64px; 
+  }
 }

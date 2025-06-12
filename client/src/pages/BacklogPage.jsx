@@ -12,8 +12,6 @@ import TaskDialog from '../components/TaskDialog';
 import Pagination from '../components/Pagination';
 
 // Styling
-import '../styles/main.css';
-import '../styles/backlog.css';
 
 export default function BacklogPage() {
   const { documentId } = useParams({ strict: false });
@@ -59,16 +57,41 @@ export default function BacklogPage() {
     setCurrentPage(pageNumber);
   };
 
-  if (projectLoading || isLoading) return <p>Backlog taken laden...</p>;
-  if (error) return <p>Fout bij laden backlog taken</p>;
-  if (!project) return <p>Project niet gevonden</p>;
+  if (projectLoading || isLoading)
+    return (
+      <div className="loading-state">
+        <div className="loading-spinner"></div>
+        <p>Laden...</p>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="error-state">
+        <p>Er is een fout opgetreden</p>
+      </div>
+    );
+
+  if (!project)
+    return (
+      <div className="error-state">
+        <p>Project niet gevonden</p>
+      </div>
+    );
 
   return (
     <div className="backlog-container">
       <div className="backlog-header">
-        <h1>{project?.name || 'Project'}</h1>
-        <button className="add-task-button" onClick={() => setShowForm(true)}>
-          + Add Backlog Task
+        <div className="header-content">
+          <h2 className="project-title">{project?.name || 'Project'} - Backlog</h2>
+          <p className="project-subtitle">Taken in de backlog</p>
+          <div className="backlog-stats">
+            <div className="stat-marker"></div>
+            <span className="task-count">{totalBacklogTasks} taken</span>
+          </div>
+        </div>
+        <button className="header-link" onClick={() => setShowForm(true)}>
+          Nieuwe Taak
         </button>
       </div>
 
@@ -87,37 +110,37 @@ export default function BacklogPage() {
 
       <div className="backlog-tasks">
         {totalBacklogTasks === 0 && (
-          <div className="empty-backlog">
-            <h3>Geen backlog taken gevonden</h3>
-            <p>Er zijn momenteel geen taken met de status "Backlog" voor dit project.</p>
+          <div className="empty-state">
+            <div className="desert-landscape">
+              <div className="horizon-line"></div>
+              <div className="desert-dunes"></div>
+              <div className="desert-sun"></div>
+            </div>
+            <h3>De voorraad is leeg</h3>
+            <p>Er wachten geen taken op hun reis door de woestijn</p>
           </div>
         )}
-        {currentItems.map(task => (
-          <div key={task.id} className="backlog-task-card" onClick={() => setSelectedTask(task)}>
-            <h4>{task.taskTitle}</h4>
-            <p>
-              {!task.taskDescription || task.taskDescription.trim() === ''
-                ? 'Geen beschrijving'
-                : task.taskDescription}
-            </p>
-            <div className="task-meta">
-              <p>
-                <span className="task-meta-label">Task ID:</span> {task.id}
-              </p>
-              <p>
-                <span className="task-meta-label">Project:</span>{' '}
-                {task.project ? `${task.project.name} (ID: ${task.project.id})` : 'Geen project'}
-              </p>
-              <p>
-                <span className="task-meta-label">Status:</span>{' '}
-                {task.taskStatus
-                  ? `${task.taskStatus.statusName} (ID: ${task.taskStatus.id})`
-                  : 'Geen status'}
-              </p>
+        <div className="task-caravan">
+          {currentItems.map(task => (
+            <div key={task.id} className="backlog-task-card" onClick={() => setSelectedTask(task)}>
+              <div className="card-marker"></div>
+              <div className="task-content">
+                <h4>{task.taskTitle}</h4>
+                <p>
+                  {!task.taskDescription || task.taskDescription.trim() === ''
+                    ? 'Geen beschrijving'
+                    : task.taskDescription}
+                </p>
+                <div className="task-meta">
+                  <div className="task-status">
+                    <div className="status-marker"></div>
+                    <span>{task.taskStatus?.statusName || 'Geen status'}</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        ))};
-
+          ))}
+        </div>
         {totalBacklogTasks > 0 && (
           <Pagination
             currentPage={currentPage}

@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
 import { fetchStatuses } from '../api/status/fetchStatuses';
+import { fetchLabels } from '../api/label/fetchLabels';
 import { updateTask } from '../api/task/updateTask';
-import '../styles/taskDialog.css';
 
 export default function TaskDialog({ task, onClose }) {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(task?.taskTitle || '');
   const [description, setDescription] = useState(task?.taskDescription || '');
   const [statusId, setStatusId] = useState(task?.taskStatus?.id || '');
+  const [selectedLabels, setSelectedLabels] = useState(task?.labels?.map(label => label.id) || []);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
@@ -24,6 +25,22 @@ export default function TaskDialog({ task, onClose }) {
     queryFn: fetchStatuses,
   });
 
+  // Haal alle beschikbare labels op voor het bewerken
+  const {
+    data: labels,
+    isLoading: labelsLoading,
+    error: labelsError,
+  } = useQuery({
+    queryKey: ['labels'],
+    queryFn: fetchLabels,
+  });
+
+  const handleLabelToggle = labelId => {
+    setSelectedLabels(prev =>
+      prev.includes(labelId) ? prev.filter(id => id !== labelId) : [...prev, labelId]
+    );
+  };
+
   const handleEditSubmit = async e => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -34,6 +51,7 @@ export default function TaskDialog({ task, onClose }) {
         taskTitle: title,
         taskDescription: description,
         taskStatus: parseInt(statusId),
+        labels: selectedLabels.length > 0 ? selectedLabels : undefined,
       });
 
       console.log('Task updated successfully:', updatedTask.id);
@@ -58,11 +76,12 @@ export default function TaskDialog({ task, onClose }) {
     setTitle(task?.taskTitle || '');
     setDescription(task?.taskDescription || '');
     setStatusId(task?.taskStatus?.id || '');
+    setSelectedLabels(task?.labels?.map(label => label.id) || []);
     setError(null);
     setIsEditing(false);
   };
 
-  if (!task) return null; // Directe toegang voor API response
+  if (!task) return null; 
   const status = task.taskStatus?.statusName || 'Onbekend';
   const projectName = task.project?.name || 'Onbekend Project';
   return (
@@ -70,16 +89,11 @@ export default function TaskDialog({ task, onClose }) {
       <div className="task-dialog">
         <div className="task-dialog-header">
           <h3>{isEditing ? 'Taak Bewerken' : 'Taak Details'}</h3>
-          <div className="header-actions">
-            {!isEditing && (
-              <button className="edit-button" onClick={() => setIsEditing(true)}>
-                Bewerken
-              </button>
-            )}
-            <button className="close-button" onClick={onClose}>
-              ×
+          {!isEditing && (
+            <button className="edit-button" onClick={() => setIsEditing(true)}>
+              Bewerken
             </button>
-          </div>
+          )}
         </div>
 
         <div className="task-dialog-content">
@@ -132,6 +146,32 @@ export default function TaskDialog({ task, onClose }) {
                 )}
               </div>
 
+              <div className="form-group">
+                <label>Labels</label>
+                {labelsLoading ? (
+                  <p>Labels laden...</p>
+                ) : labelsError ? (
+                  <p>Fout bij laden labels</p>
+                ) : (
+                  <div className="labels-container">
+                    {labels?.map(label => (
+                      <div key={label.id} className="label-item">
+                        <input
+                          type="checkbox"
+                          id={`label-${label.id}`}
+                          checked={selectedLabels.includes(label.id)}
+                          onChange={() => handleLabelToggle(label.id)}
+                          className="label-checkbox"
+                        />
+                        <label htmlFor={`label-${label.id}`} className="label-name">
+                          {label.name}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               <div className="form-actions">
                 <button
                   type="button"
@@ -177,8 +217,18 @@ export default function TaskDialog({ task, onClose }) {
               </div>
 
               <div className="task-detail">
-                <strong>Taak ID:</strong>
-                <span>{task.id}</span>
+                <strong>Labels:</strong>
+                <div className="labels-container">
+                  {task.labels && task.labels.length > 0 ? (
+                    task.labels.map(label => (
+                      <span key={label.id} className="label-badge">
+                        {label.name}
+                      </span>
+                    ))
+                  ) : (
+                    <span>Geen labels</span>
+                  )}
+                </div>
               </div>
             </>
           )}

@@ -21,6 +21,7 @@ export async function createTask(taskData) {
           taskDescription: taskData.description || '',
           project: projectId,
           taskStatus: statusId,
+          labels: taskData.labels || [],
         },
       }),
     });
