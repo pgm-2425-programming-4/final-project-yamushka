@@ -59,7 +59,5 @@ The frontend application will be available at http://localhost:5173
 
 ## Deployment
 
-- Frontend: Netlify
-- Backend API: Render (https://jammin-playground.onrender.com)
-
-
+- Frontend: Netlify => https://infrastructuur.netlify.app
+- Backend API: Render => https://jamming-api.onrender.com
