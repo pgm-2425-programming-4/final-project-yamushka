@@ -15,8 +15,6 @@ import Pagination from '../components/Pagination';
 import '../styles/main.css';
 import '../styles/backlog.css';
 
-
-
 export default function BacklogPage() {
   const { documentId } = useParams({ strict: false });
   const [showForm, setShowForm] = useState(false);
@@ -92,18 +90,15 @@ export default function BacklogPage() {
           <div className="empty-backlog">
             <h3>Geen backlog taken gevonden</h3>
             <p>Er zijn momenteel geen taken met de status "Backlog" voor dit project.</p>
-            <p>Gebruik de "Add Backlog Task" knop om een nieuwe taak toe te voegen.</p>
           </div>
         )}
         {currentItems.map(task => (
           <div key={task.id} className="backlog-task-card" onClick={() => setSelectedTask(task)}>
             <h4>{task.taskTitle}</h4>
             <p>
-              {!task.taskDescription
+              {!task.taskDescription || task.taskDescription.trim() === ''
                 ? 'Geen beschrijving'
-                : typeof task.taskDescription === 'string'
-                  ? task.taskDescription
-                  : 'Klik om beschrijving te bekijken'}
+                : task.taskDescription}
             </p>
             <div className="task-meta">
               <p>
@@ -121,7 +116,7 @@ export default function BacklogPage() {
               </p>
             </div>
           </div>
-        ))}
+        ))};
 
         {totalBacklogTasks > 0 && (
           <Pagination
