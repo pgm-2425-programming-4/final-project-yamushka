@@ -1,5 +1,5 @@
 export const API_URL = import.meta.env.PROD
-  ? 'https://jamming-api.onrender.com'
+  ? 'https://jamming-api.onrender.com/api'
   : 'http://localhost:1337/api';
 
 export const API_TOKEN = import.meta.env.PROD
