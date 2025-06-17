@@ -1,4 +1,4 @@
-import { API_URL } from '../../constants/constants';
+import { apiFetch } from '../apiFetch';
 
 export async function createTask(taskData) {
   const projectId = parseInt(taskData.projectId);
@@ -10,11 +10,8 @@ export async function createTask(taskData) {
   }
 
   try {
-    const response = await fetch(`${API_URL}/tasks`, {
+    const response = await apiFetch('/tasks', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify({
         data: {
           taskTitle: taskData.title,

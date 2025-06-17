@@ -1,11 +1,8 @@
-import { API_URL } from '../../constants/constants';
+import { apiFetch } from '../apiFetch';
 
 export async function createProject(projectData) {
-  const res = await fetch(`${API_URL}/projects`, {
+  const res = await apiFetch('/projects', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify({
       data: projectData,
     }),

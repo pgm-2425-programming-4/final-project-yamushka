@@ -1,11 +1,8 @@
-import { API_URL } from '../../constants/constants';
+import { apiFetch } from '../apiFetch';
 
 export async function updateTask(taskDocumentId, taskData) {
-  const res = await fetch(`${API_URL}/tasks/${taskDocumentId}`, {
+  const res = await apiFetch(`/tasks/${taskDocumentId}`, {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify({
       data: {
         ...taskData,

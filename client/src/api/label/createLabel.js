@@ -1,11 +1,8 @@
-import { API_URL } from '../../constants/constants';
+import { apiFetch } from '../apiFetch';
 
 export async function createLabel(labelData) {
-  const res = await fetch(`${API_URL}/labels`, {
+  const res = await apiFetch('/labels', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify({
       data: {
         name: labelData.name,

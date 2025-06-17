@@ -1,7 +1,7 @@
-import { API_URL } from '../../constants/constants';
+import { apiFetch } from '../apiFetch';
 
 export async function fetchLabels() {
-  const res = await fetch(`${API_URL}/labels`);
+  const res = await apiFetch('/labels');
 
   if (!res.ok) {
     throw new Error('Fout bij ophalen van labels');
