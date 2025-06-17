@@ -38,7 +38,8 @@ export default function TaskDialog({ task, onClose }) {
         queryClient.invalidateQueries(['tasks', projectDocumentId]);
       }
 
-      setIsEditing(false);
+      // Sluit de modal na succesvol bijwerken
+      onClose();
     } catch (err) {
       setError(err.message || 'Error updating task');
     } finally {
@@ -47,7 +48,7 @@ export default function TaskDialog({ task, onClose }) {
   };
 
   const handleCancelEdit = () => {
-    // Zet formulier waarden terug naar originele taak waarden
+    // formulier waarden  naar originele taak waarden
     setTitle(task?.taskTitle || '');
     setDescription(task?.taskDescription || '');
     setStatusId(task?.taskStatus?.id || '');

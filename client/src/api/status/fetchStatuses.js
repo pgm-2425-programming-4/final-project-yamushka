@@ -1,5 +1,8 @@
-import { simpleFetch } from '../apiHelpers';
+import { apiFetch } from '../apiFetch';
+import { handleApiResponse } from '../apiHelpers';
 
 export async function fetchStatuses() {
-  return simpleFetch('/statuses', 'Error fetching statuses');
+  const response = await apiFetch('/statuses');
+  const json = await handleApiResponse(response, 'Error fetching statuses');
+  return json.data;
 }

@@ -10,13 +10,16 @@ import { fetchProjectByDocumentId } from '../api/project/fetchProjectById.js';
 import TaskForm from '../components/TaskForm';
 import TaskDialog from '../components/TaskDialog';
 import { LoadingSpinner, ErrorMessage, EmptyState, EmptyColumn } from '../components/shared/States';
+import { useFormData } from '../hooks/useFormData';
 
 export default function ProjectPage() {
   const { documentId } = useParams({ strict: false });
   const [showForm, setShowForm] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
+  const [filters, setFilters] = useState({ statuses: [], labels: [] });
+  const [showFilters, setShowFilters] = useState(false);
+  const { statuses, labels } = useFormData();
 
-  // Haal eerst het project op om het numerieke ID te krijgen
   const { data: project, isLoading: projectLoading } = useQuery({
     queryKey: ['project', documentId],
     queryFn: () => fetchProjectByDocumentId(documentId),
@@ -39,11 +42,28 @@ export default function ProjectPage() {
     'In review': [],
     Done: [],
   };
+
+  const shouldShowTask = task => {
+    if (!task) return false;
+
+    const hasStatusFilters = filters.statuses && filters.statuses.length > 0;
+    const hasLabelFilters = filters.labels && filters.labels.length > 0;
+
+    if (!hasStatusFilters && !hasLabelFilters) return true;
+
+    const passesStatusFilter = !hasStatusFilters || filters.statuses.includes(task.taskStatus?.id);
+
+    const passesLabelFilter =
+      !hasLabelFilters ||
+      (task.labels && task.labels.some(label => filters.labels.includes(label.id)));
+
+    return passesStatusFilter && passesLabelFilter;
+  };
+
   tasks?.forEach(task => {
-    if (task) {
+    if (task && shouldShowTask(task)) {
       const status = task.taskStatus?.statusName || 'Backlog';
 
-      // Sla backlog taken over, laat alleen taken in andere kolommen zien
       if (status !== 'Backlog' && grouped[status]) {
         grouped[status].push(task);
       }
@@ -65,6 +85,11 @@ export default function ProjectPage() {
         </div>
 
         <div className="header-actions">
+          <button className="btn btn-secondary" onClick={() => setShowFilters(!showFilters)}>
+            Filters{' '}
+            {(filters.statuses?.length > 0 || filters.labels?.length > 0) &&
+              `(${(filters.statuses?.length || 0) + (filters.labels?.length || 0)})`}
+          </button>
           <Link to={`/projects/${documentId}/backlog`} className="btn btn-secondary">
             Backlog
           </Link>
@@ -73,6 +98,75 @@ export default function ProjectPage() {
           </button>
         </div>
       </div>
+
+      {showFilters && (
+        <div className="filter-content">
+          <div className="filter-section">
+            <h4>Status</h4>
+            <div className="filter-buttons">
+              {statuses?.map(status => (
+                <button
+                  key={status.id}
+                  className={`filter-btn ${filters.statuses?.includes(status.id) ? 'active' : ''}`}
+                  onClick={() => {
+                    const currentStatusFilters = filters.statuses || [];
+                    const newStatusFilters = currentStatusFilters.includes(status.id)
+                      ? currentStatusFilters.filter(id => id !== status.id)
+                      : [...currentStatusFilters, status.id];
+
+                    setFilters({
+                      ...filters,
+                      statuses: newStatusFilters,
+                    });
+                  }}
+                >
+                  {status.statusName}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="filter-section">
+            <h4>Labels</h4>
+            <div className="filter-buttons">
+              {labels?.map(label => (
+                <button
+                  key={label.id}
+                  className={`filter-btn ${filters.labels?.includes(label.id) ? 'active' : ''}`}
+                  onClick={() => {
+                    const currentLabelFilters = filters.labels || [];
+                    const newLabelFilters = currentLabelFilters.includes(label.id)
+                      ? currentLabelFilters.filter(id => id !== label.id)
+                      : [...currentLabelFilters, label.id];
+
+                    setFilters({
+                      ...filters,
+                      labels: newLabelFilters,
+                    });
+                  }}
+                  style={{
+                    backgroundColor: filters.labels?.includes(label.id)
+                      ? label.color
+                      : 'transparent',
+                    borderColor: label.color,
+                  }}
+                >
+                  {label.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {(filters.statuses?.length > 0 || filters.labels?.length > 0) && (
+            <button
+              className="clear-filters-btn"
+              onClick={() => setFilters({ statuses: [], labels: [] })}
+            >
+              Wis Filters
+            </button>
+          )}
+        </div>
+      )}
 
       {showForm && project && (
         <div className="form-overlay">

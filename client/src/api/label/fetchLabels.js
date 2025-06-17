@@ -1,5 +1,8 @@
-import { simpleFetch } from '../apiHelpers';
+import { apiFetch } from '../apiFetch';
+import { handleApiResponse } from '../apiHelpers';
 
 export async function fetchLabels() {
-  return simpleFetch('/labels', 'Fout bij ophalen van labels');
+  const response = await apiFetch('/labels');
+  const json = await handleApiResponse(response, 'Fout bij ophalen van labels');
+  return json.data;
 }

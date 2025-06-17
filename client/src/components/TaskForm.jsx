@@ -27,22 +27,21 @@ export default function TaskForm({ projectId, projectDocumentId, onSuccess, onCa
         description,
         projectId,
         statusId: parseInt(statusId),
-        labels: selectedLabels, // Voeg geselecteerde labels toe
+        labels: selectedLabels, 
       });
 
-      // Maak het formulier leeg
+ 
       setTitle('');
       setDescription('');
-      setStatusId('2'); // Terug naar standaard (Backlog)
-      setSelectedLabels([]); // Leeg de geselecteerde labels
+      setStatusId('2'); 
+      setSelectedLabels([]); 
 
-      // Vernieuw taken met documentId voor consistentie
+      // Vernieuw taken met documentId
       if (projectDocumentId) {
         queryClient.invalidateQueries(['tasks', projectDocumentId]);
       }
       queryClient.invalidateQueries(['tasks', String(projectId)]);
 
-      // Roep success callback aan
       if (onSuccess) onSuccess();
     } catch (err) {
       setError(err.message || 'Error creating task');
