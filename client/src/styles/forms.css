@@ -1,34 +1,13 @@
-@import url('base/variables.css');
-
-/* -----------------------------------------------------------------
-   FORM CONTAINERS - Modal form wrappers
-   ----------------------------------------------------------------- */
 .task-form-container {
   background: var(--color-white);
   border: 6px solid var(--color-black);
-  box-shadow: var(--shadow-xl);
   padding: var(--space-2xl);
   max-width: 600px;
   width: 90%;
   max-height: 85vh;
   overflow-y: auto;
-  animation: slideUp 0.3s ease;
 }
 
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* -----------------------------------------------------------------
-   FORM HEADERS - Form titles and headings
-   ----------------------------------------------------------------- */
 .task-form-container h3 {
   margin-top: 0;
   margin-bottom: var(--space-xl);
@@ -38,16 +17,7 @@
   color: var(--color-black);
   border-bottom: 4px solid var(--color-black);
   padding-bottom: var(--space-lg);
-  letter-spacing: -0.01em;
   text-transform: uppercase;
-  text-shadow: 3px 3px 0px var(--color-electric-yellow);
-}
-
-/* -----------------------------------------------------------------
-   FORM GROUPS - Input field containers
-   ----------------------------------------------------------------- */
-.form-group {
-  margin-bottom: var(--space-lg);
 }
 
 .form-group label {
@@ -58,12 +28,12 @@
   font-size: var(--text-sm);
   color: var(--color-black);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
-/* -----------------------------------------------------------------
-   FORM INPUTS - Text inputs, textareas, selects
-   ----------------------------------------------------------------- */
+.form-group {
+  margin-bottom: var(--space-lg);
+}
+
 .form-group input,
 .form-group textarea,
 .form-group select {
@@ -76,8 +46,6 @@
   background-color: var(--color-white);
   color: var(--color-black);
   box-sizing: border-box;
-  transition: all var(--transition-fast);
-  box-shadow: var(--shadow-poster);
 }
 
 .form-group input:focus,
@@ -86,17 +54,12 @@
   outline: none;
   border-color: var(--color-electric-blue);
   box-shadow: 0 0 0 4px var(--color-electric-yellow);
-  background-color: var(--color-white);
 }
 
 .form-group textarea {
   min-height: 120px;
   resize: vertical;
-  line-height: 1.6;
 }
-/* -----------------------------------------------------------------
-   FORM ACTIONS - Submit and cancel buttons
-   ----------------------------------------------------------------- */
 .form-actions {
   display: flex;
   justify-content: flex-end;
