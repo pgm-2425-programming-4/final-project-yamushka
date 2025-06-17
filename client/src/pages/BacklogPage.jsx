@@ -1,4 +1,4 @@
-import { useParams } from '@tanstack/react-router';
+import { useParams, Link } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
@@ -82,18 +82,26 @@ export default function BacklogPage() {
 
   return (
     <div className="backlog-container">
-      <div className="backlog-header">
-        <div className="header-content">
-          <h2 className="project-title">{project?.name || 'Project'} - Backlog</h2>
-          <p className="project-subtitle">Taken in de backlog</p>
-          <div className="backlog-stats">
-            <div className="stat-marker"></div>
-            <span className="task-count">{totalBacklogTasks} taken</span>
+      <div className="project-header">
+        <div className="header-left">
+          <div className="header-content">
+            <h2 className="project-title">{project?.name || 'Project'} - Backlog</h2>
+            <p className="project-subtitle">Taken in de backlog</p>
+            <div className="backlog-stats">
+              <div className="stat-marker"></div>
+              <span className="task-count">{totalBacklogTasks} taken</span>
+            </div>
           </div>
         </div>
-        <button className="header-link" onClick={() => setShowForm(true)}>
-          Nieuwe Taak
-        </button>
+
+        <div className="header-actions">
+          <Link to={`/projects/${documentId}`} className="btn btn-secondary">
+            Kanban Board
+          </Link>
+          <button className="btn btn-primary" onClick={() => setShowForm(true)}>
+            Nieuwe Taak
+          </button>
+        </div>
       </div>
 
       {showForm && project && (
@@ -112,7 +120,7 @@ export default function BacklogPage() {
       <div className="backlog-tasks">
         {totalBacklogTasks === 0 && (
           <div className="empty-state">
-            <div className="empty-icon">📋</div>
+            <div className="empty-icon"></div>
             <h3>BACKLOG IS LEEG</h3>
             <p>GEEN TAKEN IN DE BACKLOG</p>
           </div>

@@ -106,24 +106,24 @@ export default function TaskForm({ projectId, projectDocumentId, onSuccess, onCa
         </div>
 
         <div className="form-group">
-          <label htmlFor="status">Status</label>
+          <label>Status</label>
           {statusesLoading ? (
             <p>Statussen laden...</p>
           ) : statusesError ? (
             <p>Fout bij laden statussen</p>
           ) : (
-            <select
-              id="status"
-              value={statusId}
-              onChange={e => setStatusId(e.target.value)}
-              className="status-select"
-            >
+            <div className="status-buttons">
               {statuses?.map(status => (
-                <option key={status.id} value={status.id}>
+                <button
+                  key={status.id}
+                  type="button"
+                  className={`status-btn ${statusId === status.id.toString() ? 'active' : ''}`}
+                  onClick={() => setStatusId(status.id.toString())}
+                >
                   {status.statusName}
-                </option>
+                </button>
               ))}
-            </select>
+            </div>
           )}
           <p className="form-help">Standaard is Backlog</p>
         </div>
@@ -135,17 +135,21 @@ export default function TaskForm({ projectId, projectDocumentId, onSuccess, onCa
           ) : labelsError ? (
             <p>Fout bij laden labels</p>
           ) : (
-            <div className="labels-container">
+            <div className="label-buttons">
               {labels?.map(label => (
-                <div key={label.id} className="label-item">
-                  <input
-                    type="checkbox"
-                    id={`label-${label.id}`}
-                    checked={selectedLabels.includes(label.id)}
-                    onChange={() => handleLabelToggle(label.id)}
-                  />
-                  <label htmlFor={`label-${label.id}`}>{label.name}</label>
-                </div>
+                <button
+                  key={label.id}
+                  type="button"
+                  className={`label-btn ${selectedLabels.includes(label.id) ? 'active' : ''}`}
+                  onClick={() => handleLabelToggle(label.id)}
+                  style={{
+                    backgroundColor: selectedLabels.includes(label.id)
+                      ? label.color
+                      : 'transparent',
+                  }}
+                >
+                  {label.name}
+                </button>
               ))}
             </div>
           )}

@@ -2,7 +2,6 @@ import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
 import ProjectForm from './ProjectForm';
 
-
 export default function Header() {
   const [showProjectForm, setShowProjectForm] = useState(false);
 

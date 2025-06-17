@@ -1,4 +1,4 @@
-import { useParams } from '@tanstack/react-router';
+import { useParams, Link } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
@@ -74,13 +74,21 @@ export default function ProjectPage() {
   return (
     <div className="project-page">
       <div className="project-header">
-        <div className="header-content">
-          <h2 className="project-title">{project?.name || 'Taakbord'}</h2>
-          <p className="project-subtitle">Organiseer je taken</p>
+        <div className="header-left">
+          <div className="header-content">
+            <h2 className="project-title">{project?.name || 'Taakbord'}</h2>
+            <p className="project-subtitle">Organiseer je taken</p>
+          </div>
         </div>
-        <button className="header-link" onClick={() => setShowForm(true)}>
-          Nieuwe Taak
-        </button>
+
+        <div className="header-actions">
+          <Link to={`/projects/${documentId}/backlog`} className="btn btn-secondary">
+            Backlog
+          </Link>
+          <button className="btn btn-primary" onClick={() => setShowForm(true)}>
+            Nieuwe Taak
+          </button>
+        </div>
       </div>
 
       {showForm && project && (
