@@ -1,9 +1,5 @@
 @import url('base/variables.css');
 
-/* =================================================================
-   BUTTON SYSTEM - Organized by category and usage
-   ================================================================= */
-
 /* -----------------------------------------------------------------
    BASE BUTTON STYLES
    ----------------------------------------------------------------- */
@@ -23,23 +19,13 @@ button {
   background: var(--color-electric-yellow);
   color: var(--color-black);
   cursor: pointer;
-  transition: all var(--transition-fast);
   box-shadow: var(--shadow-poster);
-  position: relative;
-}
-
-.btn:hover,
-button:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 10px 10px 0px var(--color-black);
 }
 
 .btn:disabled,
 button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  transform: none;
-  pointer-events: none;
 }
 
 /* -----------------------------------------------------------------
@@ -49,17 +35,9 @@ button:disabled {
 /* Primary Buttons - Main actions */
 .btn.primary,
 .btn-primary,
-.add-task-button,
 .submit-button {
   background: var(--color-electric-blue);
   color: var(--color-white);
-}
-
-.btn.primary:hover,
-.btn-primary:hover,
-.add-task-button:hover,
-.submit-button:hover:not(:disabled) {
-  background: var(--color-hot-pink);
 }
 
 /* Secondary Buttons - Alternative actions */
@@ -70,30 +48,59 @@ button:disabled {
   color: var(--color-black);
 }
 
-.btn.secondary:hover,
-.btn-secondary:hover,
-.cancel-button:hover:not(:disabled) {
-  background: var(--color-electric-yellow);
+/* -----------------------------------------------------------------
+   STATUS AND LABEL SELECTION - Button-based form controls
+   ----------------------------------------------------------------- */
+.status-buttons,
+.label-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+  padding: var(--space-md);
+  background: var(--color-cyan);
+  border: 4px solid var(--color-black);
+  box-shadow: var(--shadow-poster);
 }
 
-/* Success Buttons - Positive actions */
-.btn.success {
-  background: var(--color-neon-green);
+.label-buttons {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.status-btn {
+  padding: var(--space-sm) var(--space-md);
+  border: 3px solid var(--color-black);
+  background: var(--color-white);
   color: var(--color-black);
+  font-family: var(--font-body);
+  font-weight: var(--weight-black);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  cursor: pointer;
+  min-width: 100px;
 }
 
-.btn.success:hover {
-  background: var(--color-electric-yellow);
-}
-
-/* Danger Buttons - Destructive actions */
-.btn.danger {
-  background: var(--color-red);
+.status-btn.active {
+  background: var(--color-electric-blue);
   color: var(--color-white);
 }
 
-.btn.danger:hover {
-  background: var(--color-hot-pink);
+.label-btn {
+  padding: var(--space-sm) var(--space-md);
+  border: 3px solid var(--color-black);
+  background: var(--color-white);
+  color: var(--color-black);
+  font-family: var(--font-body);
+  font-weight: var(--weight-black);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.label-btn.active {
+  background: var(--color-electric-blue);
+  color: var(--color-white);
 }
 
 /* -----------------------------------------------------------------
@@ -114,40 +121,6 @@ button:disabled {
   background: var(--color-hot-pink);
   color: var(--color-white);
   cursor: pointer;
-  transition: all var(--transition-fast);
-  position: relative;
-}
-
-.header-link:hover {
-  background: var(--color-electric-yellow);
-  color: var(--color-black);
-  border-color: var(--color-black);
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px var(--color-white);
-}
-
-.add-project-button {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-sm);
-  padding: var(--space-sm) var(--space-lg);
-  background: var(--color-hot-pink);
-  color: var(--color-white);
-  border: 3px solid var(--color-black);
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-black);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  box-shadow: var(--shadow-poster);
-  white-space: nowrap;
-  text-transform: uppercase;
-}
-
-.add-project-button:hover {
-  background: var(--color-electric-blue);
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0px var(--color-black);
 }
 
 /* -----------------------------------------------------------------
@@ -163,8 +136,6 @@ button:disabled {
   text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
-  transition: all var(--transition-fast);
-  box-shadow: var(--shadow-poster);
   display: inline-flex;
   align-items: center;
   gap: var(--space-xs);
@@ -175,22 +146,9 @@ button:disabled {
   color: var(--color-white);
 }
 
-.header-actions .btn-primary:hover {
-  background: var(--color-neon-green);
-  color: var(--color-black);
-  transform: translate(-2px, -2px);
-  box-shadow: 4px 4px 0px var(--color-black);
-}
-
 .header-actions .btn-secondary {
   background: var(--color-white);
   color: var(--color-black);
-}
-
-.header-actions .btn-secondary:hover {
-  background: var(--color-electric-yellow);
-  transform: translate(-2px, -2px);
-  box-shadow: 4px 4px 0px var(--color-black);
 }
 
 /* Special styling for backlog headers */
@@ -202,49 +160,6 @@ button:disabled {
 /* -----------------------------------------------------------------
    DIALOG AND MODAL BUTTONS - Dialog specific buttons
    ----------------------------------------------------------------- */
-.edit-button {
-  background: var(--color-hot-pink);
-  color: var(--color-white);
-  border: 3px solid var(--color-black);
-  padding: var(--space-xs) var(--space-sm);
-  cursor: pointer;
-  font-family: var(--font-body);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-black);
-  text-transform: uppercase;
-  transition: all var(--transition-fast);
-  box-shadow: var(--shadow-poster);
-}
-
-.edit-button:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0px var(--color-black);
-  background: var(--color-electric-blue);
-}
-
-.close-button {
-  background: var(--color-white);
-  border: 3px solid var(--color-black);
-  font-size: var(--text-xl);
-  cursor: pointer;
-  color: var(--color-black);
-  padding: var(--space-sm);
-  transition: all var(--transition-fast);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  font-weight: var(--weight-black);
-  box-shadow: var(--shadow-poster);
-}
-
-.close-button:hover {
-  color: var(--color-white);
-  background: var(--color-red);
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0px var(--color-black);
-}
 
 .close-button-text {
   background: var(--color-white);
@@ -262,94 +177,6 @@ button:disabled {
 
 .close-button-text:hover {
   background: var(--color-hot-pink);
-  color: var(--color-white);
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0px var(--color-black);
-}
-
-/* -----------------------------------------------------------------
-   FORM BUTTONS - Status and label selection buttons
-   ----------------------------------------------------------------- */
-
-/* Status Selection Buttons */
-.status-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-sm);
-  margin-top: var(--space-sm);
-  padding: var(--space-md);
-  background: var(--color-cyan);
-  border: 4px solid var(--color-black);
-  box-shadow: var(--shadow-poster);
-}
-
-.status-btn {
-  padding: var(--space-sm) var(--space-md);
-  border: 3px solid var(--color-black);
-  background: var(--color-white);
-  color: var(--color-black);
-  font-family: var(--font-body);
-  font-weight: var(--weight-black);
-  font-size: var(--text-sm);
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  box-shadow: var(--shadow-sm);
-  min-width: 100px;
-}
-
-.status-btn:hover {
-  background: var(--color-electric-yellow);
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0px var(--color-black);
-}
-
-.status-btn.active {
-  background: var(--color-electric-blue);
-  color: var(--color-white);
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0px var(--color-black);
-}
-
-.status-btn.active:hover {
-  background: var(--color-hot-pink);
-}
-
-/* Label Selection Buttons */
-.label-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-sm);
-  margin-top: var(--space-sm);
-  max-height: 150px;
-  overflow-y: auto;
-  padding: var(--space-md);
-  background: var(--color-cyan);
-  border: 4px solid var(--color-black);
-  box-shadow: var(--shadow-poster);
-}
-
-.label-btn {
-  padding: var(--space-sm) var(--space-md);
-  border: 3px solid var(--color-black);
-  background: var(--color-white);
-  color: var(--color-black);
-  font-family: var(--font-body);
-  font-weight: var(--weight-black);
-  font-size: var(--text-sm);
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all var(--transition-fast);
-  box-shadow: var(--shadow-sm);
-}
-
-.label-btn:hover {
-  background: var(--color-electric-yellow);
-  transform: translate(-1px, -1px);
-  box-shadow: 3px 3px 0px var(--color-black);
-}
-
-.label-btn.active {
   color: var(--color-white);
   transform: translate(-1px, -1px);
   box-shadow: 3px 3px 0px var(--color-black);
@@ -410,39 +237,3 @@ button:disabled {
 /* -----------------------------------------------------------------
    RESPONSIVE DESIGN - Mobile optimizations
    ----------------------------------------------------------------- */
-@media (max-width: 768px) {
-  .header-actions {
-    flex-direction: column;
-    width: 100%;
-    gap: var(--space-sm);
-  }
-
-  .header-actions .btn {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .status-buttons,
-  .label-buttons {
-    padding: var(--space-sm);
-  }
-
-  .status-btn,
-  .label-btn {
-    min-width: auto;
-    flex: 1;
-  }
-}
-
-@media (max-width: 480px) {
-  .btn,
-  button {
-    padding: var(--space-sm) var(--space-md);
-    font-size: var(--text-sm);
-  }
-
-  .header-link {
-    padding: var(--space-xs) var(--space-md);
-    font-size: var(--text-sm);
-  }
-}

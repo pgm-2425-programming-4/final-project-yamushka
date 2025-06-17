@@ -110,10 +110,6 @@ export default function ProjectPage() {
             <h3 className="column-title">{status}</h3>
             {list.length === 0 && (
               <div className="empty-column">
-                <div className="desert-scene">
-                  <div className="small-dune"></div>
-                  <div className="cactus"></div>
-                </div>
                 <p>Nog geen taken in deze fase</p>
               </div>
             )}

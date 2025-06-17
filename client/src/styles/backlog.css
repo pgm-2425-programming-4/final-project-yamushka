@@ -99,14 +99,3 @@
   font-weight: var(--weight-black);
   text-transform: uppercase;
 }
-
-/* Backlog Empty State */
-.backlog-tasks .empty-state {
-  background: var(--color-cyan);
-  border: 6px solid var(--color-black);
-  padding: var(--space-4xl) var(--space-xl);
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  box-shadow: var(--shadow-poster);
-}

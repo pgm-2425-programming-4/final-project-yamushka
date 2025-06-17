@@ -125,7 +125,6 @@ export default function TaskForm({ projectId, projectDocumentId, onSuccess, onCa
               ))}
             </div>
           )}
-          <p className="form-help">Standaard is Backlog</p>
         </div>
 
         <div className="form-group">
@@ -153,7 +152,6 @@ export default function TaskForm({ projectId, projectDocumentId, onSuccess, onCa
               ))}
             </div>
           )}
-          <p className="form-help">Kies een of meer labels</p>
         </div>
 
         <div className="form-actions">

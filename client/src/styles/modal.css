@@ -1,30 +1,12 @@
 @import url('base/variables.css');
 
 /* =================================================================
-   MODAL SYSTEM - Organized by type and usage
+   MODAL SYSTEM - Reorganized for clarity and maintainability
    ================================================================= */
 
 /* -----------------------------------------------------------------
-   BASE MODAL STYLES - Overlays and containers
+   1. ANIMATIONS
    ----------------------------------------------------------------- */
-
-/* Form Overlay - Base overlay for all modals */
-.form-overlay,
-.task-dialog-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(4px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  animation: fadeIn 0.2s ease;
-}
-
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -32,22 +14,6 @@
   to {
     opacity: 1;
   }
-}
-
-/* -----------------------------------------------------------------
-   TASK DIALOG MODAL - Task details and editing
-   ----------------------------------------------------------------- */
-.task-dialog {
-  background-color: var(--color-white);
-  border: 6px solid var(--color-black);
-  width: 90%;
-  max-width: 500px;
-  max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: var(--shadow-xl);
-  animation: slideUp 0.3s ease;
-  display: flex;
-  flex-direction: column;
 }
 
 @keyframes slideUp {
@@ -61,6 +27,58 @@
   }
 }
 
+/* -----------------------------------------------------------------
+   2. OVERLAY BASE
+   ----------------------------------------------------------------- */
+.form-overlay,
+.task-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+/* -----------------------------------------------------------------
+   3. MODAL CONTAINERS
+   ----------------------------------------------------------------- */
+
+/* Task Dialog Modal */
+.task-dialog {
+  background-color: var(--color-white);
+  border: 6px solid var(--color-black);
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-xl);
+  animation: slideUp 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Task Form Modal */
+.task-form-container {
+  background: var(--color-white);
+  border: 6px solid var(--color-black);
+  box-shadow: var(--shadow-xl);
+  padding: var(--space-2xl);
+  max-width: 600px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+}
+
+/* -----------------------------------------------------------------
+   4. MODAL STRUCTURE
+   ----------------------------------------------------------------- */
+
+/* Headers */
 .task-dialog-header {
   display: flex;
   justify-content: space-between;
@@ -81,36 +99,6 @@
   text-shadow: 2px 2px 0px var(--color-white);
 }
 
-.task-dialog-content {
-  padding: var(--space-lg);
-  flex: 1;
-  overflow-y: auto;
-}
-
-.task-dialog-footer {
-  padding: var(--space-lg) var(--space-xl);
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--space-md);
-  border-top: 4px solid var(--color-black);
-  background: var(--color-electric-yellow);
-}
-
-/* -----------------------------------------------------------------
-   TASK FORM MODAL - Creating and editing tasks
-   ----------------------------------------------------------------- */
-.task-form-container {
-  background: var(--color-white);
-  border: 6px solid var(--color-black);
-  box-shadow: var(--shadow-xl);
-  padding: var(--space-2xl);
-  max-width: 600px;
-  width: 90%;
-  max-height: 85vh;
-  overflow-y: auto;
-  animation: slideUp 0.3s ease;
-}
-
 .task-form-container h3 {
   margin-top: 0;
   margin-bottom: var(--space-xl);
@@ -125,8 +113,25 @@
   text-shadow: 3px 3px 0px var(--color-electric-yellow);
 }
 
+/* Content Areas */
+.task-dialog-content {
+  padding: var(--space-lg);
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Footers */
+.task-dialog-footer {
+  padding: var(--space-lg) var(--space-xl);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-md);
+  border-top: 4px solid var(--color-black);
+  background: var(--color-electric-yellow);
+}
+
 /* -----------------------------------------------------------------
-   FORM ELEMENTS - Shared form styling for modals
+   5. FORM ELEMENTS
    ----------------------------------------------------------------- */
 .form-group {
   margin-bottom: var(--space-lg);
@@ -183,17 +188,11 @@
   border-top: 4px solid var(--color-black);
 }
 
-.form-help {
-  font-size: 0.8rem;
-  color: var(--color-black);
-  font-weight: var(--weight-bold);
-  margin-top: 0.25rem;
-  text-transform: uppercase;
-}
-
 /* -----------------------------------------------------------------
-   TASK DETAILS - Information display in dialogs
+   6. CONTENT DISPLAY
    ----------------------------------------------------------------- */
+
+/* Task Details */
 .task-detail {
   margin-bottom: var(--space-md);
   padding: var(--space-md);
@@ -224,7 +223,7 @@
 }
 
 /* -----------------------------------------------------------------
-   BADGES AND LABELS - Status and label display
+   7. BADGES & LABELS
    ----------------------------------------------------------------- */
 .status-badge {
   background: var(--color-neon-green);
@@ -260,117 +259,3 @@
   margin-top: var(--space-xs);
 }
 
-/* -----------------------------------------------------------------
-   DEBUG SECTION - Development debugging display
-   ----------------------------------------------------------------- */
-.task-dialog-debug {
-  padding: var(--space-lg);
-  background: var(--color-gray-light);
-  border-top: 4px solid var(--color-black);
-}
-
-.task-dialog-debug h4 {
-  margin-top: 0;
-  margin-bottom: var(--space-md);
-  color: var(--color-black);
-  font-family: var(--font-display);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-black);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.task-dialog-debug pre {
-  font-size: var(--text-xs);
-  overflow-x: auto;
-  background-color: var(--color-white);
-  padding: var(--space-md);
-  border: 3px solid var(--color-black);
-  color: var(--color-black);
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-  font-weight: var(--weight-bold);
-  box-shadow: var(--shadow-poster);
-}
-
-/* -----------------------------------------------------------------
-   MESSAGE STYLES - Error and success messages in modals
-   ----------------------------------------------------------------- */
-.error-message {
-  background: var(--color-red);
-  color: var(--color-white);
-  padding: var(--space-md);
-  margin-bottom: var(--space-lg);
-  border: 4px solid var(--color-black);
-  font-weight: var(--weight-black);
-  font-size: var(--text-sm);
-  text-transform: uppercase;
-  box-shadow: var(--shadow-poster);
-  text-shadow: 2px 2px 0px var(--color-black);
-}
-
-.success-message {
-  background: var(--color-neon-green);
-  border: 4px solid var(--color-black);
-  color: var(--color-black);
-  padding: var(--space-md) var(--space-lg);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-black);
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  margin-bottom: var(--space-lg);
-  position: relative;
-  box-shadow: var(--shadow-poster);
-}
-
-/* -----------------------------------------------------------------
-   RESPONSIVE DESIGN - Mobile optimizations for modals
-   ----------------------------------------------------------------- */
-@media (max-width: 768px) {
-  .task-dialog,
-  .task-form-container {
-    width: 95%;
-    max-height: 95vh;
-  }
-
-  .task-dialog-header,
-  .task-dialog-content,
-  .task-dialog-footer {
-    padding: var(--space-md);
-  }
-
-  .task-form-container {
-    padding: var(--space-lg);
-  }
-
-  .form-actions {
-    flex-direction: column;
-    gap: var(--space-sm);
-  }
-
-  .form-actions button {
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .task-dialog,
-  .task-form-container {
-    width: 98%;
-    max-height: 98vh;
-  }
-
-  .task-dialog-header h3 {
-    font-size: var(--text-base);
-  }
-
-  .task-form-container h3 {
-    font-size: var(--text-lg);
-  }
-
-  .form-group input,
-  .form-group textarea,
-  .form-group select {
-    padding: var(--space-sm);
-    font-size: var(--text-sm);
-  }
-}

@@ -1,7 +1,7 @@
 @import url('base/variables.css');
 
 /* -----------------------------------------------------------------
-   MAIN NAVIGATION HEADER - Fixed top navigation
+   MAIN NAVIGATION HEADER 
    ----------------------------------------------------------------- */
 .header {
   position: fixed;
@@ -23,7 +23,6 @@
   align-items: center;
 }
 
-/* Brand/Logo Styling */
 .brand {
   text-decoration: none;
   color: var(--color-white);
@@ -38,7 +37,6 @@
   text-shadow: 3px 3px 0px var(--color-electric-yellow);
 }
 
-/* Navigation Actions */
 .header-actions {
   display: flex;
   align-items: center;
@@ -46,7 +44,7 @@
 }
 
 /* -----------------------------------------------------------------
-   PROJECT PAGE HEADERS - Content page headers with actions
+   PROJECT PAGE HEADERS
    ----------------------------------------------------------------- */
 .project-header {
   padding: var(--space-lg);
@@ -61,12 +59,10 @@
   gap: var(--space-xl);
 }
 
-/* Project page header - Hot pink background */
 .project-page .project-header {
   background: var(--color-hot-pink);
 }
 
-/* Backlog page header - Electric blue background */
 .backlog-container .project-header {
   background: var(--color-electric-blue);
 }
@@ -103,7 +99,6 @@
   opacity: 0.9;
 }
 
-/* Backlog Stats in Header */
 .backlog-stats {
   display: flex;
   align-items: center;
@@ -170,7 +165,6 @@
   letter-spacing: 0.02em;
 }
 
-/* About Page Hero */
 .about-hero {
   padding: var(--space-4xl) var(--space-xl) var(--space-3xl);
   text-align: center;
@@ -295,92 +289,3 @@
 /* -----------------------------------------------------------------
    RESPONSIVE DESIGN - Mobile optimizations
    ----------------------------------------------------------------- */
-@media (max-width: 768px) {
-  /* Main Navigation Header */
-  .header-container {
-    padding: var(--space-sm) var(--space-md);
-  }
-
-  .brand-text {
-    font-size: var(--text-xl);
-  }
-
-  .header-actions {
-    gap: var(--space-sm);
-  }
-
-  /* Project Headers */
-  .project-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-lg);
-  }
-
-  .header-actions {
-    width: 100%;
-    justify-content: flex-start;
-  }
-
-  /* Hero Sections */
-  .hero-section {
-    padding: var(--space-3xl) var(--space-lg) var(--space-2xl);
-  }
-
-  .hero-title {
-    font-size: var(--text-4xl);
-  }
-
-  .hero-subtitle {
-    font-size: var(--text-lg);
-  }
-
-  .about-hero {
-    padding: var(--space-3xl) var(--space-lg) var(--space-2xl);
-  }
-
-  .about-title {
-    font-size: var(--text-4xl);
-  }
-
-  .about-subtitle {
-    font-size: var(--text-lg);
-  }
-
-  /* Section Headers */
-  .section-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-sm);
-  }
-
-  .section-title {
-    font-size: var(--text-3xl);
-  }
-}
-
-@media (max-width: 480px) {
-  /* Project Headers */
-  .project-header {
-    padding: var(--space-md);
-  }
-
-  .header-actions {
-    flex-direction: column;
-    width: 100%;
-    gap: var(--space-sm);
-  }
-
-  .header-actions .btn {
-    width: 100%;
-    justify-content: center;
-  }
-
-  /* Hero Sections */
-  .hero-section {
-    padding: var(--space-2xl) var(--space-md) var(--space-xl);
-  }
-
-  .about-hero {
-    padding: var(--space-2xl) var(--space-md) var(--space-xl);
-  }
-}
