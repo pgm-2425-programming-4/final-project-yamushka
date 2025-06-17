@@ -9,6 +9,7 @@ import { fetchProjectByDocumentId } from '../api/project/fetchProjectById.js';
 // componenten
 import TaskForm from '../components/TaskForm';
 import TaskDialog from '../components/TaskDialog';
+import { LoadingSpinner, ErrorMessage, EmptyState, EmptyColumn } from '../components/shared/States';
 
 export default function ProjectPage() {
   const { documentId } = useParams({ strict: false });
@@ -49,27 +50,9 @@ export default function ProjectPage() {
     }
   });
 
-  if (projectLoading || isLoading)
-    return (
-      <div className="loading-state">
-        <div className="loading-spinner"></div>
-        <p>Laden...</p>
-      </div>
-    );
-
-  if (error)
-    return (
-      <div className="error-state">
-        <p>Er is een fout opgetreden</p>
-      </div>
-    );
-
-  if (!project)
-    return (
-      <div className="error-state">
-        <p>Project niet gevonden</p>
-      </div>
-    );
+  if (projectLoading || isLoading) return <LoadingSpinner />;
+  if (error) return <ErrorMessage message="Er is een fout opgetreden" />;
+  if (!project) return <ErrorMessage message="Project niet gevonden" />;
 
   return (
     <div className="project-page">
@@ -108,18 +91,13 @@ export default function ProjectPage() {
         {Object.entries(grouped).map(([status, list]) => (
           <div key={status} className="kanban-column">
             <h3 className="column-title">{status}</h3>
-            {list.length === 0 && (
-              <div className="empty-column">
-                <p>Nog geen taken in deze fase</p>
-              </div>
-            )}
+            {list.length === 0 && <EmptyColumn message="Nog geen taken in deze fase" />}
             <div className="task-trail">
               {list.map(task => (
                 <div
                   key={task.id}
                   className="kanban-card"
                   onClick={() => {
-                    console.log('Task clicked:', task);
                     setSelectedTask(task);
                   }}
                 >

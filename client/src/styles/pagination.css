@@ -1,11 +1,24 @@
 .pagination {
   display: flex;
-  gap: var(--space-sm);
-  justify-content: center;
+  flex-direction: column;
+  gap: var(--space-md);
+  align-items: center;
   margin: var(--space-2xl) 0;
 }
 
-.pagination button {
+.pagination-info {
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+}
+
+.pagination-controls {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: center;
+}
+
+.pagination-controls button {
   background: var(--color-electric-yellow);
   border: 2px solid var(--color-black);
   color: var(--color-black);
@@ -14,12 +27,12 @@
   cursor: pointer;
 }
 
-.pagination button.active {
+.pagination-controls button.active {
   background: var(--color-electric-blue);
   color: var(--color-white);
 }
 
-.pagination button:disabled {
+.pagination-controls button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }

@@ -9,14 +9,14 @@
 }
 
 .about-content {
-  padding: 0 var(--space-xl) var(--space-4xl);
+  padding: var(--space-2xl) var(--space-xl) var(--space-2xl);
 }
 
 .about-section {
-  margin-bottom: var(--space-4xl);
+  margin-bottom: var(--space-2xl);
   background: var(--color-white);
   border: 6px solid var(--color-black);
-  padding: var(--space-2xl);
+  padding: var(--space-2xl) var(--space-2xl) var(--space-xl);
 }
 
 .about-section p {

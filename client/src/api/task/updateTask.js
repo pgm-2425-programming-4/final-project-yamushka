@@ -1,4 +1,5 @@
 import { apiFetch } from '../apiFetch';
+import { handleApiResponse } from '../apiHelpers';
 
 export async function updateTask(taskDocumentId, taskData) {
   const res = await apiFetch(`/tasks/${taskDocumentId}`, {
@@ -11,11 +12,6 @@ export async function updateTask(taskDocumentId, taskData) {
     }),
   });
 
-  if (!res.ok) {
-    const errorData = await res.json();
-    throw new Error(errorData.error?.message || 'Error updating task');
-  }
-
-  const json = await res.json();
+  const json = await handleApiResponse(res, 'Error updating task');
   return json.data;
 }

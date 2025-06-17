@@ -39,13 +39,13 @@
    PROJECT PAGE HEADERS
    ----------------------------------------------------------------- */
 .project-header {
-  padding: var(--space-lg);
+  padding: var(--space-xl) var(--space-2xl);
   border: 6px solid var(--color-black);
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-2xl);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--space-xl);
+  gap: var(--space-2xl);
 }
 
 .project-page .project-header {
@@ -63,7 +63,8 @@
 .header-content {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
+  gap: var(--space-sm);
+  padding: var(--space-md) 0;
 }
 
 .project-header .project-title {
@@ -108,7 +109,7 @@
 .hero-section,
 .about-hero,
 .section-header {
-  padding: var(--space-lg);
+  padding: var(--space-2xl);
   background: var(--color-electric-yellow);
   border: 6px solid var(--color-black);
   margin-bottom: var(--space-xl);
@@ -117,7 +118,7 @@
 .hero-section,
 .about-hero {
   text-align: center;
-  padding: var(--space-4xl) var(--space-xl);
+  padding: var(--space-md) var(--space-xl);
 }
 
 .section-header {
@@ -130,6 +131,7 @@
 .hero-content {
   max-width: 600px;
   margin: 0 auto;
+  padding: var(--space-xl) var(--space-lg);
 }
 
 .hero-title,

@@ -44,5 +44,3 @@ export const router = createRouter({
   routeTree,
   defaultPreload: 'intent',
 });
-
-console.log('setup wordt geladen');

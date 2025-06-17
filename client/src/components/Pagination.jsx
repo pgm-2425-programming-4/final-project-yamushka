@@ -1,75 +1,35 @@
-import React from 'react';
-
 export default function Pagination({ currentPage, totalItems, itemsPerPage = 10, onPageChange }) {
   const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startItem = (currentPage - 1) * itemsPerPage + 1;
+  const endItem = Math.min(currentPage * itemsPerPage, totalItems);
 
-  if (totalPages <= 1) return null; 
+  if (totalPages <= 1) return null;
 
-  // welke pagina nummers om te laten zien
-  const pageNumbers = [];
-  const maxPagesToShow = 5;
-
-  let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
-  let endPage = startPage + maxPagesToShow - 1;
-
-  if (endPage > totalPages) {
-    endPage = totalPages;
-    startPage = Math.max(1, endPage - maxPagesToShow + 1);
-  }
-
-  for (let i = startPage; i <= endPage; i++) {
-    pageNumbers.push(i);
-  }
-
-  // show wat 
   return (
     <div className="pagination">
       <div className="pagination-info">
-        Showing {Math.min((currentPage - 1) * itemsPerPage + 1, totalItems)} -
-        {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} items
+        {totalItems === 1
+          ? `${totalItems} item`
+          : `Weergeven ${startItem}-${endItem} van ${totalItems} items`}
       </div>
 
       <div className="pagination-controls">
-        <button
-          className="pagination-button"
-          disabled={currentPage === 1}
-          onClick={() => onPageChange(1)}
-        >
-          &laquo; First
+        <button disabled={currentPage === 1} onClick={() => onPageChange(currentPage - 1)}>
+          Vorige
         </button>
 
-        <button
-          className="pagination-button"
-          disabled={currentPage === 1}
-          onClick={() => onPageChange(currentPage - 1)}
-        >
-          &lt; Previous
-        </button>
-
-        {pageNumbers.map(number => (
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
           <button
-            key={number}
-            className={`pagination-button ${currentPage === number ? 'active' : ''}`}
-            onClick={() => onPageChange(number)}
+            key={page}
+            className={currentPage === page ? 'active' : ''}
+            onClick={() => onPageChange(page)}
           >
-            {number}
+            {page}
           </button>
         ))}
 
-        <button
-          className="pagination-button"
-          disabled={currentPage === totalPages}
-          onClick={() => onPageChange(currentPage + 1)}
-        >
-          Next &gt;
-        </button>
-
-        <button
-          className="pagination-button"
-          disabled={currentPage === totalPages}
-          onClick={() => onPageChange(totalPages)}
-        >
-          Last &raquo;
+        <button disabled={currentPage === totalPages} onClick={() => onPageChange(currentPage + 1)}>
+          Volgende
         </button>
       </div>
     </div>

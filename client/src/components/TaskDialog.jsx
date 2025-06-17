@@ -1,45 +1,23 @@
-import React, { useState } from 'react';
-import { useQueryClient, useQuery } from '@tanstack/react-query';
-import { fetchStatuses } from '../api/status/fetchStatuses';
-import { fetchLabels } from '../api/label/fetchLabels';
+import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useFormData, useLabelToggle } from '../hooks/useFormData';
 import { updateTask } from '../api/task/updateTask';
+import { FormSection } from './shared/FormSection';
 
 export default function TaskDialog({ task, onClose }) {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(task?.taskTitle || '');
   const [description, setDescription] = useState(task?.taskDescription || '');
   const [statusId, setStatusId] = useState(task?.taskStatus?.id || '');
-  const [selectedLabels, setSelectedLabels] = useState(task?.labels?.map(label => label.id) || []);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
   const queryClient = useQueryClient();
-
-  // Haal alle beschikbare statussen op voor het bewerken
-  const {
-    data: statuses,
-    isLoading: statusesLoading,
-    error: statusesError,
-  } = useQuery({
-    queryKey: ['statuses'],
-    queryFn: fetchStatuses,
-  });
-
-  // Haal alle beschikbare labels op voor het bewerken
-  const {
-    data: labels,
-    isLoading: labelsLoading,
-    error: labelsError,
-  } = useQuery({
-    queryKey: ['labels'],
-    queryFn: fetchLabels,
-  });
-
-  const handleLabelToggle = labelId => {
-    setSelectedLabels(prev =>
-      prev.includes(labelId) ? prev.filter(id => id !== labelId) : [...prev, labelId]
-    );
-  };
+  const { statuses, statusesLoading, statusesError, labels, labelsLoading, labelsError } =
+    useFormData();
+  const { selectedLabels, setSelectedLabels, handleLabelToggle } = useLabelToggle(
+    task?.labels?.map(label => label.id) || []
+  );
 
   const handleEditSubmit = async e => {
     e.preventDefault();
@@ -47,14 +25,12 @@ export default function TaskDialog({ task, onClose }) {
     setError(null);
 
     try {
-      const updatedTask = await updateTask(task.documentId, {
+      await updateTask(task.documentId, {
         taskTitle: title,
         taskDescription: description,
         taskStatus: parseInt(statusId),
         labels: selectedLabels.length > 0 ? selectedLabels : undefined,
       });
-
-      console.log('Task updated successfully:', updatedTask.id);
 
       // Vernieuw de takenlijst met het project documentId
       const projectDocumentId = task.project?.documentId;
@@ -64,7 +40,6 @@ export default function TaskDialog({ task, onClose }) {
 
       setIsEditing(false);
     } catch (err) {
-      console.error('error updating task:', err);
       setError(err.message || 'Error updating task');
     } finally {
       setIsSubmitting(false);
@@ -124,54 +99,52 @@ export default function TaskDialog({ task, onClose }) {
                 />
               </div>
 
-              <div className="form-group">
-                <label>Status</label>
-                {statusesLoading ? (
-                  <p>Statussen laden...</p>
-                ) : statusesError ? (
-                  <p>Fout bij laden statussen</p>
-                ) : (
-                  <div className="status-buttons">
-                    {statuses?.map(status => (
-                      <button
-                        key={status.id}
-                        type="button"
-                        className={`status-btn ${statusId === status.id.toString() ? 'active' : ''}`}
-                        onClick={() => setStatusId(status.id.toString())}
-                      >
-                        {status.statusName}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <FormSection
+                label="Status"
+                isLoading={statusesLoading}
+                error={statusesError}
+                loadingText="Statussen laden..."
+                errorText="Fout bij laden statussen"
+              >
+                <div className="status-buttons">
+                  {statuses?.map(status => (
+                    <button
+                      key={status.id}
+                      type="button"
+                      className={`status-btn ${statusId === status.id.toString() ? 'active' : ''}`}
+                      onClick={() => setStatusId(status.id.toString())}
+                    >
+                      {status.statusName}
+                    </button>
+                  ))}
+                </div>
+              </FormSection>
 
-              <div className="form-group">
-                <label>Labels</label>
-                {labelsLoading ? (
-                  <p>Labels laden...</p>
-                ) : labelsError ? (
-                  <p>Fout bij laden labels</p>
-                ) : (
-                  <div className="label-buttons">
-                    {labels?.map(label => (
-                      <button
-                        key={label.id}
-                        type="button"
-                        className={`label-btn ${selectedLabels.includes(label.id) ? 'active' : ''}`}
-                        onClick={() => handleLabelToggle(label.id)}
-                        style={{
-                          backgroundColor: selectedLabels.includes(label.id)
-                            ? label.color
-                            : 'transparent',
-                        }}
-                      >
-                        {label.name}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <FormSection
+                label="Labels"
+                isLoading={labelsLoading}
+                error={labelsError}
+                loadingText="Labels laden..."
+                errorText="Fout bij laden labels"
+              >
+                <div className="label-buttons">
+                  {labels?.map(label => (
+                    <button
+                      key={label.id}
+                      type="button"
+                      className={`label-btn ${selectedLabels.includes(label.id) ? 'active' : ''}`}
+                      onClick={() => handleLabelToggle(label.id)}
+                      style={{
+                        backgroundColor: selectedLabels.includes(label.id)
+                          ? label.color
+                          : 'transparent',
+                      }}
+                    >
+                      {label.name}
+                    </button>
+                  ))}
+                </div>
+              </FormSection>
 
               <div className="form-actions">
                 <button
@@ -209,7 +182,9 @@ export default function TaskDialog({ task, onClose }) {
 
               <div className="task-detail">
                 <strong>Status:</strong>
-                <span className="status-badge">{status}</span>
+                <div className="badges-container">
+                  <span className="status-badge">{status}</span>
+                </div>
               </div>
 
               <div className="task-detail">
@@ -219,7 +194,7 @@ export default function TaskDialog({ task, onClose }) {
 
               <div className="task-detail">
                 <strong>Labels:</strong>
-                <div className="labels-container">
+                <div className="badges-container">
                   {task.labels && task.labels.length > 0 ? (
                     task.labels.map(label => (
                       <span key={label.id} className="label-badge">
@@ -227,7 +202,7 @@ export default function TaskDialog({ task, onClose }) {
                       </span>
                     ))
                   ) : (
-                    <span>Geen labels</span>
+                    <span className="empty-badge">Geen labels</span>
                   )}
                 </div>
               </div>

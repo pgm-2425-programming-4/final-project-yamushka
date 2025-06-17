@@ -10,6 +10,7 @@ import { fetchProjectByDocumentId } from '../api/project/fetchProjectById.js';
 import TaskForm from '../components/TaskForm';
 import TaskDialog from '../components/TaskDialog';
 import Pagination from '../components/Pagination';
+import { LoadingSpinner, ErrorMessage, EmptyState } from '../components/shared/States';
 
 // Styling
 import '../styles/main.css';
@@ -58,27 +59,9 @@ export default function BacklogPage() {
     setCurrentPage(pageNumber);
   };
 
-  if (projectLoading || isLoading)
-    return (
-      <div className="loading-state">
-        <div className="loading-spinner"></div>
-        <p>Laden...</p>
-      </div>
-    );
-
-  if (error)
-    return (
-      <div className="error-state">
-        <p>Er is een fout opgetreden</p>
-      </div>
-    );
-
-  if (!project)
-    return (
-      <div className="error-state">
-        <p>Project niet gevonden</p>
-      </div>
-    );
+  if (projectLoading || isLoading) return <LoadingSpinner />;
+  if (error) return <ErrorMessage message="Er is een fout opgetreden" />;
+  if (!project) return <ErrorMessage message="Project niet gevonden" />;
 
   return (
     <div className="backlog-container">
@@ -119,11 +102,7 @@ export default function BacklogPage() {
 
       <div className="backlog-tasks">
         {totalBacklogTasks === 0 && (
-          <div className="empty-state">
-            <div className="empty-icon"></div>
-            <h3>BACKLOG IS LEEG</h3>
-            <p>GEEN TAKEN IN DE BACKLOG</p>
-          </div>
+          <EmptyState title="BACKLOG IS LEEG" message="GEEN TAKEN IN DE BACKLOG" />
         )}
         <div className="task-caravan">
           {currentItems.map(task => (

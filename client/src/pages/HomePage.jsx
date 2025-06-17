@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { fetchAllProjects } from '../api/project/fetchAllProjects';
+import { LoadingSpinner, ErrorMessage, EmptyState } from '../components/shared/States';
 
 export default function HomePage() {
   const {
@@ -12,27 +13,16 @@ export default function HomePage() {
     queryFn: fetchAllProjects,
   });
 
-  if (isLoading)
-    return (
-      <div className="loading-state">
-        <div className="loading-spinner"></div>
-        <p>Projecten laden...</p>
-      </div>
-    );
-
+  if (isLoading) return <LoadingSpinner message="Projecten laden..." />;
   if (error)
-    return (
-      <div className="error-state">
-        <p>Er is een fout opgetreden bij het laden van projecten</p>
-      </div>
-    );
+    return <ErrorMessage message="Er is een fout opgetreden bij het laden van projecten" />;
 
   return (
     <div className="home-page">
       {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-content">
-          <h1 className="hero-title">Joanna Kanban</h1>
+          <h1 className="hero-title">Kanban board</h1>
           <p className="hero-subtitle">Efficiënt projectbeheer en taakorganisatie</p>
         </div>
       </section>
@@ -49,10 +39,10 @@ export default function HomePage() {
         </div>
 
         {projects?.length === 0 ? (
-          <div className="empty-state">
-            <h3>Nog geen projecten</h3>
-            <p>Maak je eerste project aan om te beginnen</p>
-          </div>
+          <EmptyState
+            title="Nog geen projecten"
+            message="Maak je eerste project aan om te beginnen"
+          />
         ) : (
           <div className="projects-grid">
             {projects?.map((project, index) => (

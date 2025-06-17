@@ -6,7 +6,7 @@
 .projects-section {
   max-width: var(--container-lg);
   margin: 0 auto;
-  padding: 0 var(--space-xl) var(--space-4xl);
+  padding: var(--space-2xl) var(--space-xl) var(--space-2xl);
 }
 
 .projects-grid {

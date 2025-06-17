@@ -1,17 +1,12 @@
 import { apiFetch } from '../apiFetch';
+import { handleApiResponse } from '../apiHelpers';
 
 export async function createProject(projectData) {
   const res = await apiFetch('/projects', {
     method: 'POST',
-    body: JSON.stringify({
-      data: projectData,
-    }),
+    body: JSON.stringify({ data: projectData }),
   });
 
-  if (!res.ok) {
-    throw new Error('Fout bij aanmaken van project');
-  }
-
-  const json = await res.json();
+  const json = await handleApiResponse(res, 'Fout bij aanmaken van project');
   return json.data;
 }

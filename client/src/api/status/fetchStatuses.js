@@ -1,12 +1,5 @@
-import { apiFetch } from '../apiFetch';
+import { simpleFetch } from '../apiHelpers';
 
 export async function fetchStatuses() {
-  const res = await apiFetch('/statuses');
-
-  if (!res.ok) {
-    throw new Error('Error fetching statuses');
-  }
-
-  const json = await res.json();
-  return json.data;
+  return simpleFetch('/statuses', 'Error fetching statuses');
 }

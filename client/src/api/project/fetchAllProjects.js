@@ -1,12 +1,5 @@
-import { apiFetch } from '../apiFetch';
+import { simpleFetch } from '../apiHelpers';
 
 export async function fetchAllProjects() {
-  const res = await apiFetch('/projects');
-
-  if (!res.ok) {
-    throw new Error('Fout bij ophalen van projecten');
-  }
-
-  const json = await res.json();
-  return json.data;
+  return simpleFetch('/projects', 'Fout bij ophalen van projecten');
 }
