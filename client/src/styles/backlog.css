@@ -83,3 +83,90 @@
   font-weight: var(--weight-black);
   text-transform: uppercase;
 }
+
+/* -----------------------------------------------------------------
+   RESPONSIVE DESIGN - MOBILE & TABLET
+   ----------------------------------------------------------------- */
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .backlog-container {
+    padding: var(--space-md);
+  }
+
+  .backlog-tasks {
+    padding: var(--space-md);
+  }
+
+  .task-caravan {
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+  }
+
+  .backlog-task-card {
+    padding: var(--space-lg);
+  }
+
+  .task-content {
+    padding-right: var(--space-lg);
+  }
+
+  .backlog-task-card h4 {
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-sm);
+  }
+
+  .backlog-task-card p {
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-md);
+  }
+
+  .task-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+
+  .task-status {
+    gap: var(--space-xs);
+  }
+
+  .card-marker {
+    width: 12px;
+    height: 12px;
+    top: var(--space-md);
+    right: var(--space-md);
+  }
+
+  .status-marker {
+    width: 6px;
+    height: 6px;
+  }
+
+  .task-status span {
+    font-size: var(--text-xs);
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .backlog-container {
+    padding: var(--space-lg);
+  }
+
+  .backlog-tasks {
+    padding: var(--space-lg);
+  }
+
+  .backlog-task-card {
+    padding: var(--space-xl);
+  }
+
+  .backlog-task-card h4 {
+    font-size: var(--text-xl);
+  }
+
+  .backlog-task-card p {
+    font-size: var(--text-base);
+  }
+}

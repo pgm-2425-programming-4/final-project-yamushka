@@ -94,6 +94,13 @@
   /* Container Widths */
   --container-md: 768px;
   --container-lg: 1024px;
+  --container-xl: 1200px;
+
+  /* Responsive Breakpoints */
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1200px;
 
   /* Z-Index Scale */
   --z-overlay: 20;

@@ -86,3 +86,70 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* -----------------------------------------------------------------
+   RESPONSIVE DESIGN - MOBILE & TABLET
+   ----------------------------------------------------------------- */
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .projects-section {
+    padding: var(--space-xl) var(--space-md);
+  }
+
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+    padding: var(--space-md) 0;
+  }
+
+  .card-content {
+    padding: var(--space-lg);
+  }
+
+  .project-marker {
+    width: 40px;
+    height: 40px;
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-sm);
+  }
+
+  .project-title {
+    font-size: var(--text-lg);
+  }
+
+  .project-actions {
+    gap: var(--space-xs);
+  }
+
+  .action-link {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-sm);
+  }
+
+  .link-arrow {
+    font-size: var(--text-sm);
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .projects-section {
+    padding: var(--space-xl) var(--space-lg);
+  }
+
+  .projects-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-lg);
+  }
+
+  .project-marker {
+    width: 50px;
+    height: 50px;
+    font-size: var(--text-xl);
+  }
+
+  .project-title {
+    font-size: var(--text-xl);
+  }
+}

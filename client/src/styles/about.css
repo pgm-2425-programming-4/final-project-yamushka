@@ -78,3 +78,76 @@
   margin: 0;
   text-transform: uppercase;
 }
+
+/* -----------------------------------------------------------------
+   RESPONSIVE DESIGN - MOBILE & TABLET
+   ----------------------------------------------------------------- */
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .about-container {
+    max-width: 100%;
+  }
+
+  .about-content {
+    padding: var(--space-xl) var(--space-md);
+  }
+
+  .about-section {
+    margin-bottom: var(--space-xl);
+    padding: var(--space-xl) var(--space-lg);
+  }
+
+  .about-section p {
+    font-size: var(--text-base);
+    margin-bottom: var(--space-md);
+  }
+
+  .contact-info {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+  }
+
+  .contact-card {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-sm);
+    padding: var(--space-lg);
+  }
+
+  .contact-card .contact-icon {
+    width: 40px;
+    height: 40px;
+    font-size: var(--text-base);
+  }
+
+  .contact-card h4 {
+    font-size: var(--text-sm);
+  }
+
+  .contact-card p {
+    font-size: var(--text-xs);
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .about-content {
+    padding: var(--space-xl) var(--space-lg);
+  }
+
+  .about-section {
+    padding: var(--space-xl);
+  }
+
+  .contact-info {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-md);
+  }
+
+  .contact-card {
+    gap: var(--space-md);
+    padding: var(--space-lg);
+  }
+}

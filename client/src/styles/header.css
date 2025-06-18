@@ -197,3 +197,117 @@
   color: var(--color-black);
   text-transform: uppercase;
 }
+
+/* -----------------------------------------------------------------
+   RESPONSIVE DESIGN - MOBILE & TABLET
+   ----------------------------------------------------------------- */
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .header-container {
+    padding: var(--space-sm) var(--space-md);
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+
+  .brand-text {
+    font-size: var(--text-lg);
+  }
+
+  .header-actions {
+    flex-direction: column;
+    gap: var(--space-xs);
+    width: 100%;
+    margin-top: var(--space-sm);
+  }
+
+  .header-actions .btn,
+  .header-actions a.btn,
+  .header-link {
+    width: 100%;
+    justify-content: center;
+    font-size: var(--text-xs);
+    padding: var(--space-xs) var(--space-sm);
+  }
+
+  /* Project headers */
+  .project-header {
+    flex-direction: column;
+    gap: var(--space-lg);
+    padding: var(--space-lg) var(--space-md);
+    text-align: center;
+  }
+
+  .project-header .project-title {
+    font-size: var(--text-2xl);
+  }
+
+  .header-actions {
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .header-actions .btn {
+    flex: 1;
+    min-width: 120px;
+  }
+
+  /* Hero sections */
+  .hero-section,
+  .about-hero,
+  .section-header {
+    padding: var(--space-lg) var(--space-md);
+    margin-top: 1.5rem;
+  }
+
+  .hero-title,
+  .about-title {
+    font-size: var(--text-3xl);
+  }
+
+  .section-title {
+    font-size: var(--text-2xl);
+  }
+
+  .hero-subtitle,
+  .about-subtitle {
+    font-size: var(--text-base);
+  }
+
+  .section-header {
+    flex-direction: column;
+    gap: var(--space-md);
+    text-align: center;
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .header-container {
+    padding: var(--space-sm) var(--space-lg);
+  }
+
+  .brand-text {
+    font-size: var(--text-xl);
+  }
+
+  .project-header {
+    padding: var(--space-xl) var(--space-lg);
+    gap: var(--space-xl);
+  }
+
+  .project-header .project-title {
+    font-size: var(--text-3xl);
+  }
+
+  .hero-title,
+  .about-title {
+    font-size: var(--text-4xl);
+  }
+
+  .section-title {
+    font-size: var(--text-3xl);
+  }
+}
