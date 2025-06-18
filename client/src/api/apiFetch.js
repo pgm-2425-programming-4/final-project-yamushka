@@ -7,7 +7,6 @@ export async function apiFetch(endpoint, options = {}) {
     ...options,
     headers: {
       'Content-Type': 'application/json',
-      //  Authorization header in production
       ...(import.meta.env.PROD ? { Authorization: `Bearer ${API_TOKEN}` } : {}),
       ...options.headers,
     },

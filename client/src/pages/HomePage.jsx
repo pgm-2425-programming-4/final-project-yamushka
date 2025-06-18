@@ -1,9 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { fetchAllProjects } from '../api/project/fetchAllProjects';
+import { deleteProject } from '../api/project/deleteProject';
 import { LoadingSpinner, ErrorMessage, EmptyState } from '../components/shared/States';
+import { showToast, showConfirm } from '../components/shared/Toast';
 
 export default function HomePage() {
+  const queryClient = useQueryClient();
+
   const {
     data: projects,
     isLoading,
@@ -12,6 +16,27 @@ export default function HomePage() {
     queryKey: ['projects'],
     queryFn: fetchAllProjects,
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteProject,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['projects'] });
+      showToast('Project succesvol verwijderd', 'success');
+    },
+    onError: error => {
+      showToast(`Fout bij verwijderen: ${error.message}`, 'error');
+    },
+  });
+
+  const handleDeleteProject = async project => {
+    const confirmDelete = await showConfirm(
+      `Weet je zeker dat je het project "${project.name}" wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.`
+    );
+
+    if (confirmDelete) {
+      deleteMutation.mutate(project.documentId);
+    }
+  };
 
   if (isLoading) return <LoadingSpinner message="Projecten laden..." />;
   if (error)
@@ -69,6 +94,13 @@ export default function HomePage() {
                       <span>Backlog</span>
                       <div className="link-arrow">→</div>
                     </Link>
+                    <button
+                      onClick={() => handleDeleteProject(project)}
+                      className="action-link delete"
+                      disabled={deleteMutation.isPending}
+                    >
+                      <span>{deleteMutation.isPending ? 'Verwijderen...' : 'Verwijder'}</span>
+                    </button>
                   </div>
                 </div>
               </article>

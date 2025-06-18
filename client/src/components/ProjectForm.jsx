@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createProject } from '../api/project/createProject';
+import { showToast } from './shared/Toast';
 
 export default function ProjectForm({ onSuccess, onCancel }) {
   const [name, setName] = useState('');
@@ -12,10 +13,12 @@ export default function ProjectForm({ onSuccess, onCancel }) {
     mutationFn: createProject,
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: ['projects'] });
+      showToast('Project succesvol aangemaakt', 'success');
       onSuccess && onSuccess(data);
     },
     onError: error => {
       setError(error.message);
+      showToast(`Fout bij aanmaken: ${error.message}`, 'error');
     },
   });
 

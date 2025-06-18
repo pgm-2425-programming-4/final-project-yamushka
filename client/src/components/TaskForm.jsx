@@ -3,13 +3,14 @@ import { createTask } from '../api/task/createTask';
 import { useQueryClient } from '@tanstack/react-query';
 import { useFormData, useLabelToggle } from '../hooks/useFormData';
 import { FormSection } from './shared/FormSection';
+import { showToast } from './shared/Toast';
 
-export default function TaskForm({ projectId, projectDocumentId, onSuccess, onCancel }) {
+export default function TaskForm({ projectId, onSuccess, onCancel }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [statusId, setStatusId] = useState('2'); // Standaard naar backlog (ID: 2)
+  const [statusId, setStatusId] = useState('2');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState(null);
+  // Verwijder error state - we gebruiken alleen toasts
 
   const queryClient = useQueryClient();
   const { statuses, statusesLoading, statusesError, labels, labelsLoading, labelsError } =
@@ -19,7 +20,6 @@ export default function TaskForm({ projectId, projectDocumentId, onSuccess, onCa
   const handleSubmit = async e => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError(null);
 
     try {
       await createTask({
@@ -27,24 +27,21 @@ export default function TaskForm({ projectId, projectDocumentId, onSuccess, onCa
         description,
         projectId,
         statusId: parseInt(statusId),
-        labels: selectedLabels, 
+        labels: selectedLabels,
       });
 
- 
       setTitle('');
       setDescription('');
-      setStatusId('2'); 
-      setSelectedLabels([]); 
+      setStatusId('2');
+      setSelectedLabels([]);
 
-      // Vernieuw taken met documentId
-      if (projectDocumentId) {
-        queryClient.invalidateQueries(['tasks', projectDocumentId]);
-      }
-      queryClient.invalidateQueries(['tasks', String(projectId)]);
+      // Simpeler - vernieuw alle tasks
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
 
+      showToast('Taak succesvol aangemaakt', 'success');
       if (onSuccess) onSuccess();
     } catch (err) {
-      setError(err.message || 'Error creating task');
+      showToast(`Fout bij aanmaken taak: ${err.message}`, 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -53,8 +50,6 @@ export default function TaskForm({ projectId, projectDocumentId, onSuccess, onCa
   return (
     <div className="task-form-container">
       <h3>Nieuwe Taak Toevoegen</h3>
-
-      {error && <div className="error-message">{error}</div>}
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">

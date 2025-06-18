@@ -8,5 +8,5 @@ export async function fetchProjectByDocumentId(documentId) {
   }
 
   const json = await res.json();
-  return json.data?.[0] || null; // Geef eerste project terug of null
+  return json.data?.[0] || null;
 }

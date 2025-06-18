@@ -3,6 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useFormData, useLabelToggle } from '../hooks/useFormData';
 import { updateTask } from '../api/task/updateTask';
 import { FormSection } from './shared/FormSection';
+import { showToast } from './shared/Toast';
 
 export default function TaskDialog({ task, onClose }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -38,10 +39,12 @@ export default function TaskDialog({ task, onClose }) {
         queryClient.invalidateQueries(['tasks', projectDocumentId]);
       }
 
-      // Sluit de modal na succesvol bijwerken
+      showToast('Taak succesvol bijgewerkt', 'success');
+      setIsEditing(false);
       onClose();
     } catch (err) {
       setError(err.message || 'Error updating task');
+      showToast(`Fout bij bijwerken: ${err.message}`, 'error');
     } finally {
       setIsSubmitting(false);
     }
